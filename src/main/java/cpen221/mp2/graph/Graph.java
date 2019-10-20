@@ -15,6 +15,14 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     }
 
+    public Graph(HashMap<V,Set<E>> data) {
+        for (V v: data.keySet()) {
+            Set<E> vertexInfo = new HashSet<>();
+            vertexInfo.addAll(data.get(v));
+            graph.put(v,vertexInfo);
+        }
+    }
+
 
     @Override
     public boolean addVertex(V v) {
@@ -182,3 +190,4 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         }
     }
 }
+

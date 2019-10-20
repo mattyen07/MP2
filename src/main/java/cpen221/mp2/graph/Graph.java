@@ -43,8 +43,20 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         return false;
     }
 
+    /**
+     * adds edge e to vertex v.
+     * @param v is not null and is a vertex that has already been added.
+     * @param e is not null.
+     */
+    private void addEdgeToVertex(V v,E e) {
+        Set<E> vertexData = this.graph.get(v);
+        vertexData.add(e);
+        this.graph.replace(v,vertexData);
+    }
+
     @Override
     public boolean edge(E e) {
+
         return false;
     }
 

@@ -114,7 +114,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public int edgeLengthSum() {
-        double sum = 0;
+        int sum = 0;
         Set<E> edgeSet = new HashSet<>();
         for(V v:graph.keySet()) {
             edgeSet.addAll(graph.get(v));

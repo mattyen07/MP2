@@ -173,6 +173,18 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean remove(E e) {
+        for (V v: graph.keySet()) {
+            Set<E> edgeSet = graph.get(v);
+            if(edgeSet.contains(e)) {
+                edgeSet.remove(e);
+            }
+            graph.replace(v,edgeSet);
+        }
+
+        if (!edge(e)) {
+            return true;
+        }
+
         return false;
     }
 
@@ -184,6 +196,12 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean remove(V v) {
+        if (graph.containsKey(v)) {
+            graph.remove(v);
+        }
+        if (!graph.containsKey(v)) {
+            return true;
+        }
         return false;
     }
 
@@ -207,7 +225,16 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Set<E> allEdges(V v) {
-        return null;
+        Set<E> edges = new HashSet<>();
+        for(E e:graph.get(v)) {
+            V v1 = e.v1();
+            V v2 = e.v2();
+            int Length = e.length();
+            Edge edge = new Edge<V>(v1,v2,Length);
+            E edgeImmutable = (E) edge;
+            edges.add(edgeImmutable);
+        }
+        return edges;
     }
 
     /**
@@ -218,6 +245,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Set<E> allEdges() {
+
+
+
         return null;
     }
 
@@ -230,7 +260,20 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Map<V, E> getNeighbours(V v) {
-        return null;
+
+        Set<E> edgesOfv = allEdges(v);
+        Map<V, E> neighbours = new HashMap<>();
+        for (E e: edgesOfv) {
+            V v1 = e.v1();
+            V v2 = e.v2();
+            if (!v1.equals(v)) {
+                neighbours.put(v1, e);
+            } else {
+                neighbours.put(v2, e);
+            }
+        }
+
+        return neighbours;
     }
 
     ///////////////Start of ImGraph Implementation/////////////////////

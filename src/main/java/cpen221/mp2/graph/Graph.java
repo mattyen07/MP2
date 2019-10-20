@@ -132,6 +132,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
             }
         }
+
         return false;
     }
 
@@ -140,10 +141,20 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      *
      * @param v1 the first vertex of the edge
      * @param v2 the second vertex of the edge
-     * @return the length of the v1-v2 edge if this edge is part of the graph
+     * @return the length of the v1-v2 edge if this edge is part of the graph,
+     * returns 0 if edge is not found.
      */
     @Override
     public int edgeLength(V v1, V v2) {
+
+        Set<E> edgeSet = this.graph.get(v1);
+
+        for(E edge : edgeSet) {
+            if (edge.v1().equals(v1) && edge.v2().equals(v2)) {
+                return edge.length();
+            }
+        }
+
         return 0;
     }
 
@@ -213,7 +224,17 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Set<V> allVertices() {
-        return null;
+        Set<V> vertexSet = new HashSet<>();
+
+        for (V vertex : vertexSet) {
+            int id = vertex.id();
+            String name = vertex.name();
+            Vertex newVert = new Vertex(id, name);
+            V vertAdd = (V) newVert;
+            vertexSet.add(vertAdd);
+        }
+
+        return vertexSet;
     }
 
     /**
@@ -245,10 +266,26 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Set<E> allEdges() {
+        Set<E> edgeSet = new HashSet<>();
+        Set<E> edgeSeen = new HashSet<>();
+        Set<V> vertexSet = new HashSet<>();
 
+        for (V vertex : vertexSet) {
+            Set<E> edges = this.graph.get(vertex);
+            for (E edge : edges) {
+                if (!edgeSeen.contains(edge)) {
+                    V v1 = edge.v1();
+                    V v2 = edge.v2();
+                    int length = edge.length();
+                    Edge newEdge = new Edge(v1, v2, length);
+                    E addEdge = (E) newEdge;
+                    edgeSet.add(addEdge);
+                    edgeSeen.add(addEdge);
+                }
+            }
+        }
 
-
-        return null;
+        return edgeSet;
     }
 
     /**

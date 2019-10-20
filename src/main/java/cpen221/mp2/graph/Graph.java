@@ -206,7 +206,17 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Set<V> allVertices() {
-        return null;
+        Set<V> vertexSet = new HashSet<>();
+
+        for (V vertex : vertexSet) {
+            int id = vertex.id();
+            String name = vertex.name();
+            Vertex newVert = new Vertex(id, name);
+            V vertAdd = (V) newVert;
+            vertexSet.add(vertAdd);
+        }
+
+        return vertexSet;
     }
 
     /**
@@ -229,7 +239,26 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Set<E> allEdges() {
-        return null;
+        Set<E> edgeSet = new HashSet<>();
+        Set<E> edgeSeen = new HashSet<>();
+        Set<V> vertexSet = new HashSet<>();
+
+        for (V vertex : vertexSet) {
+            Set<E> edges = this.graph.get(vertex);
+            for (E edge : edges) {
+                if (!edgeSeen.contains(edge)) {
+                    V v1 = edge.v1();
+                    V v2 = edge.v2();
+                    int length = edge.length();
+                    Edge newEdge = new Edge(v1, v2, length);
+                    E addEdge = (E) newEdge;
+                    edgeSet.add(addEdge);
+                    edgeSeen.add(addEdge);
+                }
+            }
+        }
+        
+        return edgeSet;
     }
 
     /**

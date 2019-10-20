@@ -27,8 +27,15 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     @Override
     public boolean addVertex(V v) {
         Set<E> set = new HashSet<>();
+        Set<V> vertexSet = this.graph.keySet();
 
-        this.graph.put(v, set);
+        for (V vertex : vertexSet) {
+            if (v.id() == (vertex.id())) {
+                return false;
+            }
+        }
+
+         this.graph.put(v, set);
 
         return this.graph.containsKey(v);
     }
@@ -40,7 +47,16 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     @Override
     public boolean addEdge(E e) {
-        return false;
+        V v1 = e.v1();
+        V v2 = e.v2();
+
+        addEdgeToVertex(v1, e);
+        addEdgeToVertex(v2, e);
+
+        Set<E> vertexSet1 = this.graph.get(v1);
+        Set<E> vertexSet2 = this.graph.get(v2);
+
+        return vertexSet1.contains(e) && vertexSet2.contains(e);
     }
 
     /**
@@ -56,12 +72,36 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     @Override
     public boolean edge(E e) {
+        Set<V> vertexSet = this.graph.keySet();
+
+        for(V vertex : vertexSet) {
+            Set<E> edgeSet = this.graph.get(vertex);
+            for (E edge : edgeSet) {
+                if (edge.equals(e)) {
+                    return true;
+                }
+            }
+        }
 
         return false;
     }
 
     @Override
     public boolean edge(V v1, V v2) {
+        Set<V> vertexSet = this.graph.keySet();
+
+        for (V vertex : vertexSet) {
+            Set<E> edgeSet = this.graph.get(vertex);
+            for (E edge: edgeSet) {
+                V vertex1 = edge.v1();
+                V vertex2 = edge.v2();
+
+                if (vertex1.equals(v1) && vertex2.equals(v2)) {
+                    return true;
+                }
+
+            }
+        }
         return false;
     }
 

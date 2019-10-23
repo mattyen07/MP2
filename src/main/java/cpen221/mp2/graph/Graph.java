@@ -346,10 +346,12 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public List<E> minimumSpanningTree() {
-        Set<E> allEdges = new HashSet<>();
+        ArrayList<E> allEdges = new ArrayList<>();
         Set<V> vertexSet = this.allVertices();
+        List<E> MST = new ArrayList<>();
+        int countE = this.graph.size() - 1;
 
-        for (V v : vertexSet) {
+        for (V v : vertexSet) { //adds all edges into a list
             Set<E> edgeSet = this.graph.get(v);
             for (E edge : edgeSet) {
                 if (!allEdges.contains(edge)) {
@@ -358,7 +360,26 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             }
         }
 
-        return null;
+
+        while (countE != 0) {
+            E compareEdge = allEdges.get(0); //holder to add into MST list
+            int minLength = Integer.MAX_VALUE;
+
+            for (E edge : allEdges) {
+
+                if (edge.length() < minLength && !MST.contains(edge)) {
+                    compareEdge = edge;
+                    minLength = edge.length();
+                }
+
+            }
+
+            MST.add(compareEdge);
+
+            countE--;
+        }
+
+        return MST;
     }
 
     /**
@@ -405,10 +426,20 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      *
      * @param v1 one end of the edge
      * @param v2 the other end of the edge
-     * @return the edge connecting v1 and v2
+     * @return the edge connecting v1 and v2, returns null if the edge doesn't exist in the graph
      */
     @Override
     public E getEdge(V v1, V v2) {
+        Edge edgeCheck = new Edge (v1, v2);
+
+        for (V v : this.graph.keySet()) {
+            Set<E> edgeSet = this.graph.get(v);
+            for (E edge : edgeSet) {
+                if (edgeCheck.equals(edge)) {
+                    return edge;
+                }
+            }
+        }
         return null;
     }
 

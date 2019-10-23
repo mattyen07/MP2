@@ -367,7 +367,7 @@ public class GraphTest {
         assertEquals(g.allEdges(), answer);
     }
 
-    @Test //testing if the get neighbours functino works
+    @Test //testing if the get neighbours function works
     public void testGetNeighbours1() {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
@@ -387,6 +387,58 @@ public class GraphTest {
         answer.put(v3, e2);
 
         assertEquals(g.getNeighbours(v2), answer);
+    }
+
+    @Test
+    public void testMST1() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+        Edge e1 = new Edge (v1, v2, 5);
+        Edge e2 = new Edge (v2,v3, 4);
+        Edge e3 = new Edge (v3, v4, 3);
+        Edge e4 = new Edge (v2, v4, 1);
+        Edge e5 = new Edge (v4, v1, 2);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.addEdge(e5);
+
+        assertEquals(Arrays.asList(e4, e5, e3), g.minimumSpanningTree());
+    }
+
+    @Test
+    public void testMST2() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+        Edge e1 = new Edge (v1, v2, 3);
+        Edge e2 = new Edge (v2, v3, 1);
+        Edge e3 = new Edge (v3, v4, 3);
+        Edge e4 = new Edge (v2, v4, 2);
+        Edge e5 = new Edge (v4, v1, 2);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.addEdge(e5);
+
+        assertEquals(Arrays.asList(e2, e5, e4), g.minimumSpanningTree());
     }
 
 

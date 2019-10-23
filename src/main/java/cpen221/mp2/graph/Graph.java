@@ -335,8 +335,46 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public List<V> shortestPath(V source, V sink) {
+        HashMap<V, Integer> unvisited = new HashMap<>();
+        HashMap<V, Integer> visited = new HashMap();
+        List<V> visitedList =  new ArrayList<>();
 
-        return null;
+        for (V v : this.graph.keySet()) {
+            unvisited.put(v, Integer.MAX_VALUE);
+        }
+
+        unvisited.remove(source);
+        visited.put(source, 0);
+        visitedList.add(source);
+        V currVertex = source;
+
+        while (!visited.containsKey(sink)) {
+
+            Map<V, E> neighbours = this.getNeighbours(currVertex);
+
+            for (V vertex : neighbours.keySet()) {
+                int newLength = neighbours.get(vertex).length() + visited.get(currVertex);
+
+                if (unvisited.containsKey(vertex) && newLength < unvisited.get(vertex)) {
+                    unvisited.replace(vertex, newLength);
+                }
+            }
+
+            int minLength = Integer.MAX_VALUE;
+
+            for (V vertex : neighbours.keySet()) {
+                if (unvisited.containsKey(vertex) && unvisited.get(vertex) < minLength) {
+                    minLength = unvisited.get(vertex);
+                    currVertex = vertex;
+                }
+            }
+            
+            visitedList.add(currVertex);
+            visited.put(currVertex, unvisited.get(currVertex));
+            unvisited.remove(currVertex);
+        }
+
+        return visitedList;
     }
 
     /**
@@ -391,7 +429,18 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public int pathLength(List<V> path) {
-        return 0;
+        int sum = 0;
+
+        for (int i = 1; i < path.size(); i++) {
+            V v1 = path.get(i-1);
+            V v2 = path.get(i);
+
+            int length = this.getEdge(v1,v2).length();
+
+            sum += length;
+        }
+
+        return sum;
     }
 
     /**

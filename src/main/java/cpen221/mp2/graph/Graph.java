@@ -355,7 +355,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             for (V vertex : neighbours.keySet()) {
                 int newLength = neighbours.get(vertex).length() + visited.get(currVertex);
 
-                if (unvisited.containsKey(vertex) && newLength < unvisited.get(vertex)) {
+                if (!visited.containsKey(vertex) && newLength < unvisited.get(vertex)) {
                     unvisited.replace(vertex, newLength);
                 }
             }
@@ -363,12 +363,12 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             int minLength = Integer.MAX_VALUE;
 
             for (V vertex : neighbours.keySet()) {
-                if (unvisited.containsKey(vertex) && unvisited.get(vertex) < minLength) {
+                if (!visited.containsKey(vertex) && unvisited.get(vertex) < minLength) {
                     minLength = unvisited.get(vertex);
                     currVertex = vertex;
                 }
             }
-            
+
             visitedList.add(currVertex);
             visited.put(currVertex, unvisited.get(currVertex));
             unvisited.remove(currVertex);

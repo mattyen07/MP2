@@ -67,13 +67,17 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         V v1 = e.v1();
         V v2 = e.v2();
 
-        addEdgeToVertex(v1, e);
-        addEdgeToVertex(v2, e);
-
         Set<E> vertexSet1 = this.graph.get(v1);
         Set<E> vertexSet2 = this.graph.get(v2);
 
-        return vertexSet1.contains(e) && vertexSet2.contains(e);
+        if (vertexSet1.contains(e) || vertexSet2.contains(e)) {
+            return false;
+        } else {
+            addEdgeToVertex(v1, e);
+            addEdgeToVertex(v2, e);
+        }
+
+        return true;
     }
 
     /**
@@ -167,12 +171,15 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public int edgeLengthSum() {
         int sum = 0;
         Set<E> edgeSet = new HashSet<>();
-        for(V v:graph.keySet()) {
-            edgeSet.addAll(graph.get(v));
+        for(V v : this.graph.keySet()) {
+            for (E edge : this.graph.get(v)) {
+                if (!edgeSet.contains(edge)) {
+                    sum += edge.length();
+                    edgeSet.add(edge);
+                }
+            }
         }
-        for(E e:edgeSet) {
-            sum+=e.length();
-        }
+
         return sum;
     }
 
@@ -184,15 +191,18 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean remove(E e) {
+        boolean removalFlag = false;
+
         for (V v: graph.keySet()) {
             Set<E> edgeSet = graph.get(v);
             if(edgeSet.contains(e)) {
                 edgeSet.remove(e);
+                removalFlag = true;
             }
             graph.replace(v,edgeSet);
         }
 
-        if (!edge(e)) {
+        if (!edge(e) && removalFlag) {
             return true;
         }
 
@@ -207,10 +217,12 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean remove(V v) {
+        boolean removalFlag = false;
         if (graph.containsKey(v)) {
             graph.remove(v);
+            removalFlag = true;
         }
-        if (!graph.containsKey(v)) {
+        if (!graph.containsKey(v) && removalFlag) {
             return true;
         }
         return false;
@@ -226,7 +238,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public Set<V> allVertices() {
         Set<V> vertexSet = new HashSet<>();
 
-        for (V vertex : vertexSet) {
+        for (V vertex : this.graph.keySet()) {
             int id = vertex.id();
             String name = vertex.name();
             Vertex newVert = new Vertex(id, name);
@@ -268,9 +280,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public Set<E> allEdges() {
         Set<E> edgeSet = new HashSet<>();
         Set<E> edgeSeen = new HashSet<>();
-        Set<V> vertexSet = new HashSet<>();
 
-        for (V vertex : vertexSet) {
+        for (V vertex : this.graph.keySet()) {
             Set<E> edges = this.graph.get(vertex);
             for (E edge : edges) {
                 if (!edgeSeen.contains(edge)) {
@@ -335,6 +346,18 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public List<E> minimumSpanningTree() {
+        Set<E> allEdges = new HashSet<>();
+        Set<V> vertexSet = this.allVertices();
+
+        for (V v : vertexSet) {
+            Set<E> edgeSet = this.graph.get(v);
+            for (E edge : edgeSet) {
+                if (!allEdges.contains(edge)) {
+                    allEdges.add(edge);
+                }
+            }
+        }
+
         return null;
     }
 

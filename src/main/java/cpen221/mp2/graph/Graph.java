@@ -259,7 +259,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     @Override
     public Set<E> allEdges(V v) {
         Set<E> edges = new HashSet<>();
-        for(E e:graph.get(v)) {
+        for(E e : this.graph.get(v)) {
             V v1 = e.v1();
             V v2 = e.v2();
             int Length = e.length();
@@ -336,42 +336,44 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     @Override
     public List<V> shortestPath(V source, V sink) {
         HashMap<V, Integer> unvisited = new HashMap<>();
-        HashMap<V, Integer> visited = new HashMap();
         List<V> visitedList =  new ArrayList<>();
 
         for (V v : this.graph.keySet()) {
             unvisited.put(v, Integer.MAX_VALUE);
         }
 
-        unvisited.remove(source);
-        visited.put(source, 0);
-        visitedList.add(source);
+        unvisited.replace(source, 0);
         V currVertex = source;
 
-        while (!visited.containsKey(sink)) {
+        while (!visitedList.contains(sink)) {
 
-            Map<V, E> neighbours = this.getNeighbours(currVertex);
+            Map<V, E> sourceNeighbours = this.getNeighbours(currVertex);
+            boolean sawNewNeighbor = false;
 
-            for (V vertex : neighbours.keySet()) {
-                int newLength = neighbours.get(vertex).length() + visited.get(currVertex);
-
-                if (!visited.containsKey(vertex) && newLength < unvisited.get(vertex)) {
-                    unvisited.replace(vertex, newLength);
+            for (V vertex : sourceNeighbours.keySet()) {
+                if(!visitedList.contains(vertex)) {
+                    int length = unvisited.get(currVertex) + sourceNeighbours.get(vertex).length();
+                    if (length < unvisited.get(vertex)) {
+                        unvisited.replace(vertex, length);
+                        sawNewNeighbor = true;
+                    }
                 }
             }
+
+            if (sawNewNeighbor || currVertex.equals(sink)) {
+                visitedList.add(currVertex);
+            }
+
+            unvisited.remove(currVertex);
 
             int minLength = Integer.MAX_VALUE;
 
-            for (V vertex : neighbours.keySet()) {
-                if (!visited.containsKey(vertex) && unvisited.get(vertex) < minLength) {
-                    minLength = unvisited.get(vertex);
-                    currVertex = vertex;
+            for (V v: unvisited.keySet()){
+                if (unvisited.get(v) < minLength) {
+                    currVertex = v;
+                    minLength = unvisited.get(v);
                 }
             }
-
-            visitedList.add(currVertex);
-            visited.put(currVertex, unvisited.get(currVertex));
-            unvisited.remove(currVertex);
         }
 
         return visitedList;
@@ -406,7 +408,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
             for (E edge : allEdges) {
 
-                if (edge.length() < minLength && !MST.contains(edge)) {
+                if (!MST.contains(edge) && edge.length() < minLength) {
                     compareEdge = edge;
                     minLength = edge.length();
                 }
@@ -452,7 +454,26 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Set<V> search(V v, int range) {
-        return null;
+        Set<V> vertexSet = this.graph.keySet();
+        Set<V> vertexInRange = new HashSet<>();
+        int pathLength;
+
+        for (V vertex : vertexSet) {
+            if (vertex != v) {
+                List<V> shortestPath = shortestPath(v, vertex);
+                if (shortestPath.equals(Collections.emptyList())) {
+                    pathLength = Integer.MAX_VALUE;
+                } else {
+                    pathLength = pathLength(shortestPath);
+                }
+
+                if (pathLength < range) {
+                    vertexInRange.add(v);
+                }
+            }
+        }
+
+        return vertexInRange;
     }
 
     /**

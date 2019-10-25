@@ -8,8 +8,39 @@ import java.util.*;
  * @param <V> represents a vertex type
  */
 public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>, IGraph<V, E> {
-
+    private static boolean debug = false;
     private Map<V, Set<E>> graph = new HashMap<>();
+
+    /*
+    Abstraction Function: Creates an undirected graph of vertexes and connecting edges.
+     */
+
+    /*
+    rep invariant: if one can travel vertex v1 to vertex v2 along edge e,
+    one can travel from v2 to v1 along that same vertex.
+    Edge.length > 0.
+
+     */
+    private void checkRep() {
+        // check that if v1 connects v2, then v2 also connects to v1 along same edge
+        for (V v1: graph.keySet()) {
+            for(V v2: graph.keySet()) {
+                if(!v1.equals(v2)) {
+                    if(edge(v1, v2)) {
+                        assert(edge(v1, v2));
+                        assert(getEdge(v1, v2).equals(edge(v2, v1)));
+                    }
+                }
+            }
+        }
+
+        // check that all edge's have lengths > 0
+        for(E e:allEdges()) {
+            assert(e.length()>0);
+        }
+
+    }
+
 
     public Graph() {
 

@@ -392,6 +392,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         List<E> MST = new ArrayList<>();
         int countE = this.graph.size() - 1;
 
+
         for (V v : vertexSet) { //adds all edges into a list
             Set<E> edgeSet = this.graph.get(v);
             for (E edge : edgeSet) {
@@ -402,11 +403,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         }
 
 
-        while (countE != 0) {
+        while(countE != 0) {
             E compareEdge = allEdges.get(0); //holder to add into MST list
             int minLength = Integer.MAX_VALUE;
 
-            for (E edge : allEdges) {
+            for(E edge : allEdges) {
 
                 if (!MST.contains(edge) && edge.length() < minLength) {
                     compareEdge = edge;
@@ -416,7 +417,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             }
 
             MST.add(compareEdge);
-
+            allEdges.remove(compareEdge);
             countE--;
         }
 

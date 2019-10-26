@@ -391,7 +391,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         Set<V> vertexSet = this.allVertices();
         List<E> MST = new ArrayList<>();
         int countE = this.graph.size() - 1;
-
+        HashMap<V, Set<V>> vertexMerge = new HashMap<>();
 
         for (V v : vertexSet) { //adds all edges into a list
             Set<E> edgeSet = this.graph.get(v);
@@ -400,6 +400,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                     allEdges.add(edge);
                 }
             }
+            Set<V> vSet = new HashSet<>();
+            vertexMerge.put(v, vSet);
         }
 
 
@@ -489,7 +491,19 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public int diameter() {
-        return 0;
+        int longestPath = 0;
+        int length;
+
+        for (V v1 : this.graph.keySet()) {
+            for (V v2 : this.graph.keySet()) {
+                length = pathLength(shortestPath(v1,v2));
+                if (length > longestPath) {
+                    longestPath = length;
+                }
+            }
+        }
+
+        return longestPath;
     }
 
     /**

@@ -51,7 +51,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     }
 
     /**
-     * Constructs new graph from a HashMap of vertexe's and sets of connecting edges.
+     * Constructs new graph from a HashMap of vertices and sets of connecting edges.
      * @param data
      */
     public Graph(HashMap<V,Set<E>> data) {
@@ -462,7 +462,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public List<V> shortestPath(V source, V sink) {
-        HashMap<V, Integer> unvisited = new HashMap<>();
+        Map<V, Integer> unvisited = new HashMap<>();
         List<V> visitedList =  new ArrayList<>();
 
         for (V v : this.graph.keySet()) {
@@ -473,36 +473,25 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         V currVertex = source;
 
         while (!visitedList.contains(sink)) {
-
-            Map<V, E> sourceNeighbours = this.getNeighbours(currVertex);
-            boolean sawNewNeighbor = false;
-
-            for (V vertex : sourceNeighbours.keySet()) {
-                if(!visitedList.contains(vertex)) {
-                    int length = unvisited.get(currVertex) + sourceNeighbours.get(vertex).length();
-                    if (length < unvisited.get(vertex)) {
-                        unvisited.replace(vertex, length);
-                        sawNewNeighbor = true;
+            Map<V, E> currentNeighbours = getNeighbours(currVertex);
+            for (V v : currentNeighbours.keySet()) {
+                if (unvisited.keySet().contains(v)) {
+                    int length = unvisited.get(currVertex) + currentNeighbours.get(v).length();
+                    if (length < unvisited.get(v)) {
+                        unvisited.replace(v, length);
                     }
                 }
             }
 
-            if (sawNewNeighbor || currVertex.equals(sink)) {
-                visitedList.add(currVertex);
-            }
-
-            unvisited.remove(currVertex);
-
+            visitedList.add(currVertex);
             int minLength = Integer.MAX_VALUE;
-
-            for (V v: unvisited.keySet()){
-                if (unvisited.get(v) < minLength) {
-                    currVertex = v;
+            for (V v : unvisited.keySet()) {
+                if (unvisited.get(v) < minLength && !visitedList.contains(v)) {
                     minLength = unvisited.get(v);
+                    currVertex = v;
                 }
             }
         }
-
         return visitedList;
     }
 
@@ -510,15 +499,15 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * Compute the minimum spanning tree of the graph.
      * See https://en.wikipedia.org/wiki/Minimum_spanning_tree
      *
-     * @return a list of edges that forms a minimum spanning tree of the graph
+     * @return a list of edges that forms a minimum spanning tree of the graph, if no MST, returns an empty list
      */
     @Override
     public List<E> minimumSpanningTree() {
         ArrayList<E> allEdges = new ArrayList<>();
         Set<V> vertexSet = this.allVertices();
         List<E> MST = new ArrayList<>();
-        int countE = this.graph.size() - 1;
-        HashMap<V, Set<V>> vertexMerge = new HashMap<>();
+        Set<Set<V>> vertexSeen = new HashSet<>();
+
 
         for (V v : vertexSet) { //adds all edges into a list
             Set<E> edgeSet = this.graph.get(v);
@@ -527,30 +516,70 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                     allEdges.add(edge);
                 }
             }
-            Set<V> vSet = new HashSet<>();
-            vertexMerge.put(v, vSet);
+            Set<V> vertexAdd = new HashSet<>();
+            vertexAdd.add(v);
+            vertexSeen.add(vertexAdd);
         }
 
 
-        while(countE != 0) {
-            E compareEdge = allEdges.get(0); //holder to add into MST list
-            int minLength = Integer.MAX_VALUE;
+        while (MST.size() < vertexSet.size() - 1) {
+            boolean flag = true;
+            E shortestEdge = findShortestEdge(allEdges);
+            V v1 = shortestEdge.v1();
+            V v2 = shortestEdge.v2();
 
-            for(E edge : allEdges) {
+            for(Set<V> vSet : vertexSeen) {
+                if (vSet.contains(v1) && vSet.contains(v2)) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                MST.add(shortestEdge);
+                Set<V> v1Set = new HashSet<>();
+                Set<V> v2Set = new HashSet<>();
 
-                if (!MST.contains(edge) && edge.length() < minLength) {
-                    compareEdge = edge;
-                    minLength = edge.length();
+                for (Set<V> vSet: vertexSeen){
+                    if (vSet.contains(v1)) {
+                        v1Set = vSet;
+                    }
+                    if (vSet.contains(v2)){
+                        v2Set = vSet;
+                    }
+                }
+
+                if (v1Set != v2Set) {
+                    v1Set.addAll(v2Set);
+                    vertexSeen.remove(v2Set);
                 }
 
             }
 
-            MST.add(compareEdge);
-            allEdges.remove(compareEdge);
-            countE--;
-        }
+            allEdges.remove(shortestEdge);
 
+            if (allEdges.isEmpty()) {
+                return new ArrayList<>();
+            }
+        }
         return MST;
+    }
+
+    /**
+     * Helper method for MST, finds the shortest edge give a list of edges
+     * @param edgeSet is not null
+     * @return the shortest length edge in the edgeSet
+     */
+    private E findShortestEdge(List<E> edgeSet) {
+        E shortestEdge = edgeSet.get(0);
+        int minLength = Integer.MAX_VALUE;
+
+        for (E edge : edgeSet) {
+            if (edge.length() < minLength) {
+                minLength = edge.length();
+                shortestEdge = edge;
+            }
+        }
+        return shortestEdge;
     }
 
     /**

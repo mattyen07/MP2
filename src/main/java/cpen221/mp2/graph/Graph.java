@@ -364,8 +364,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         if(debug) {
             checkRep();
         }
-        Set<E> edges = new HashSet<>();
-        edges.addAll(this.graph.get(v));
+        Set<E> edges = this.graph.get(v);
+
         if(debug) {
             checkRep();
         }
@@ -415,15 +415,13 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             checkRep();
         }
 
-        Set<E> edgesOfv = allEdges(v);
         Map<V, E> neighbours = new HashMap<>();
-        for (E e: edgesOfv) {
-            V v1 = e.v1();
-            V v2 = e.v2();
-            if (!v1.equals(v)) {
-                neighbours.put(v1, e);
+
+        for (E e : this.graph.get(v)) {
+            if (!e.v1().equals(v)) {
+                neighbours.put(e.v1(), e);
             } else {
-                neighbours.put(v2, e);
+                neighbours.put(e.v2(), e);
             }
         }
         if(debug) {

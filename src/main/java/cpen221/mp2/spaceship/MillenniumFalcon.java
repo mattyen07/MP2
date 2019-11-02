@@ -22,7 +22,7 @@ public class MillenniumFalcon implements Spaceship {
 
     @Override
     public void hunt(HunterStage state) {
-        ArrayList<Integer> seenOnce = new ArrayList<>();
+        ArrayList<Integer> seen = new ArrayList<>();
         ArrayList<Integer> deadEnd = new ArrayList<>();
         PlanetStatus[] neighbours = state.neighbors();
         int earthID = state.currentID();
@@ -39,10 +39,12 @@ public class MillenniumFalcon implements Spaceship {
                 }
             }
 
-            if (!seenOnce.contains(nextMove)) {
+            if (!seen.contains(nextMove)) {
                 state.moveTo(nextMove);
-                seenOnce.add(nextMove);
+                seen.add(nextMove);
+                neighbours = state.neighbors();
             }
+
 
 
         }

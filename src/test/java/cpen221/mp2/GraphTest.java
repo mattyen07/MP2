@@ -483,7 +483,7 @@ public class GraphTest {
         g.addEdge(e3);
         g.addEdge(e4);
 
-        assertEquals(21, g.pathLength(g.shortestPath(v3, v4)));
+        assertEquals(Arrays.asList(v3, v2, v1, v4), g.shortestPath(v3, v4));
     }
 
     @Test
@@ -510,7 +510,7 @@ public class GraphTest {
         g.addEdge(e4);
         g.addEdge(e5);
 
-        assertEquals(14, g.pathLength(g.shortestPath(v2, v4)));
+        assertEquals(Arrays.asList(v2, v1, v4), g.shortestPath(v2, v4));
     }
 
     @Test
@@ -537,7 +537,7 @@ public class GraphTest {
         g.addEdge(e4);
         g.addEdge(e5);
 
-        assertEquals(7, g.pathLength(g.shortestPath(v2, v3)));
+        assertEquals(Arrays.asList(v2, v3), g.shortestPath(v2, v3));
     }
 
     @Test
@@ -577,6 +577,36 @@ public class GraphTest {
     }
 
     @Test
+    public void testShortestPath6() { // no path from source to sink, should return empty list
+        Vertex A = new Vertex(1, "A");
+        Vertex B = new Vertex(2, "B");
+        Vertex C = new Vertex(3, "C");
+        Vertex D = new Vertex(4, "D");
+        Vertex E = new Vertex(5, "E");
+
+
+        Edge<Vertex> AD = new Edge<>(A,D, 1);
+        Edge<Vertex> BE = new Edge<>(B,E, 2);
+        Edge<Vertex> BC = new Edge<>(B,C, 5);
+        Edge<Vertex> CE = new Edge<>(C,E, 5);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(A);
+        g.addVertex(B);
+        g.addVertex(C);
+        g.addVertex(D);
+        g.addVertex(E);
+
+        g.addEdge(AD);
+        g.addEdge(BE);
+        g.addEdge(BC);
+        g.addEdge(CE);
+
+
+        assertEquals(Arrays.asList(), g.shortestPath(A, C));
+    }
+
+    @Test
     public void testSearch1() {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
@@ -600,7 +630,11 @@ public class GraphTest {
         g.addEdge(e4);
         g.addEdge(e5);
 
-        assertEquals(Arrays.asList(v1, v3), g.search(v2, 8));
+        Set<Vertex> answer = new HashSet<>();
+        answer.add(v1);
+        answer.add(v3);
+
+        assertEquals(answer, g.search(v2, 8));
     }
 
 }

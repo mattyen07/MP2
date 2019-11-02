@@ -438,6 +438,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @param source the start vertex
      * @param sink   the end vertex
      * @return the vertices, in order, on the shortest path from source to sink (both end points are part of the list)
+     * returns an empty list if there is no path from source to sink
      */
     @Override
     public List<V> shortestPath(V source, V sink) {

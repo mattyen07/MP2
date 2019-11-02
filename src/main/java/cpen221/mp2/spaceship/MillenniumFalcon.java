@@ -10,6 +10,10 @@ import cpen221.mp2.models.PlanetStatus;
 import cpen221.mp2.util.Heap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -22,35 +26,36 @@ public class MillenniumFalcon implements Spaceship {
 
     @Override
     public void hunt(HunterStage state) {
-        ArrayList<Integer> seen = new ArrayList<>();
-        ArrayList<Integer> deadEnd = new ArrayList<>();
-        PlanetStatus[] neighbours = state.neighbors();
-        int earthID = state.currentID();
-        double maxSignal = 0;
+        Set<Integer> visited = new HashSet<>();
+        Map<Integer, Integer> parentList = new HashMap<>();
+        int currID = state.currentID();
         int nextMove = state.currentID();
+        // set earth as current id, traverse down a path, if we hit a dead end, move back up the path until we have a new path
 
-        // set earth as current id, if we hit a dead end, move to earth and restart
+        parentList.put(currID, currID);
+
         while (!state.onKamino()) {
+            PlanetStatus[] neighbours = state.neighbors();
+            double maxSignal = 0;
 
-            for (int i = 0; i < neighbours.length; i++) {
-                if (neighbours[i].signal() > maxSignal) {
-                    maxSignal = neighbours[i].signal();
-                    nextMove = neighbours[i].id();
+            for (PlanetStatus planet : neighbours) {
+                if (planet.signal() > maxSignal && !visited.contains(planet.id())) {
+                    maxSignal = planet.signal();
+                    nextMove = planet.id();
                 }
             }
 
-            if (!seen.contains(nextMove)) {
+            if (!visited.contains(nextMove)) {
+                visited.add(nextMove);
                 state.moveTo(nextMove);
-                seen.add(nextMove);
-                neighbours = state.neighbors();
+                parentList.put(nextMove, currID);
+                currID = nextMove;
+            } else {
+                nextMove = parentList.get(currID);
+                state.moveTo(nextMove);
+                currID = nextMove;
             }
-
-
-
         }
-
-
-
 
     }
 

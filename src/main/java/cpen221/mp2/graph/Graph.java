@@ -462,37 +462,93 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public List<V> shortestPath(V source, V sink) {
-        Map<V, Integer> unvisited = new HashMap<>();
-        List<V> visitedList =  new ArrayList<>();
+        //initialize set of visited vertex's
+        Set<V> visited = new HashSet<>();
+        visited.add(source);
 
-        for (V v : this.graph.keySet()) {
-            unvisited.put(v, Integer.MAX_VALUE);
+        //get set of all vertexes in graph
+        Set<V> vertexes = this.allVertices();
+
+        //get weights of shortest paths. Set all initial weights to Integer.MAX_VALUE
+        //set source weight to 0.
+        Map<V, Integer> weights = new HashMap<>();
+        for (V v: vertexes) {
+            weights.put(v, Integer.MAX_VALUE);
         }
+        weights.replace(source, 0);
 
-        unvisited.replace(source, 0);
-        V currVertex = source;
+        //this map keeps track of the previous vertex that gives the shortest path to the key vertex.
+        Map<V, V> previousVertex = new HashMap<>();
 
-        while (!visitedList.contains(sink)) {
-            Map<V, E> currentNeighbours = getNeighbours(currVertex);
-            for (V v : currentNeighbours.keySet()) {
-                if (unvisited.keySet().contains(v)) {
-                    int length = unvisited.get(currVertex) + currentNeighbours.get(v).length();
-                    if (length < unvisited.get(v)) {
-                        unvisited.replace(v, length);
+        V currentVertex = source;
+        //int currentDistance = weights.get(source);
+
+        while (!visited.contains(sink)) {
+
+            int currentDistance = weights.get(currentVertex);
+            //get neighbours
+            Map<V, E> unvisitedNeighbours = this.getNeighbours(currentVertex);
+
+            //remove visited neighbours
+            for(V v: visited) {
+                if(unvisitedNeighbours.keySet().contains(v)) {
+                    unvisitedNeighbours.remove(v);
+                }
+            }
+
+            if(unvisitedNeighbours.isEmpty()) {
+                visited.add(currentVertex);
+                currentVertex = previousVertex.get(currentVertex);
+
+                unvisitedNeighbours = this.getNeighbours(currentVertex);
+
+                //remove visited neighbours
+                for(V v: visited) {
+                    if(unvisitedNeighbours.keySet().contains(v)) {
+                        unvisitedNeighbours.remove(v);
                     }
                 }
+
             }
 
-            visitedList.add(currVertex);
-            int minLength = Integer.MAX_VALUE;
-            for (V v : unvisited.keySet()) {
-                if (unvisited.get(v) < minLength && !visitedList.contains(v)) {
-                    minLength = unvisited.get(v);
-                    currVertex = v;
+            //update weights map and if update previousVertex map.
+            for (V v: unvisitedNeighbours.keySet()) {
+                if (unvisitedNeighbours.get(v).length() + currentDistance <= weights.get(v)) {
+                    weights.replace(v, unvisitedNeighbours.get(v).length() + currentDistance);
+                    previousVertex.put(v, currentVertex);
                 }
             }
+
+            visited.add(currentVertex);
+
+            //set current vertex to closest vertex
+            int closestDistance = Integer.MAX_VALUE;
+            for (V v: unvisitedNeighbours.keySet()) {
+                if(weights.get(v) <= closestDistance) {
+                    currentVertex = v;
+                    closestDistance = weights.get(v);
+                }
+            }
+
         }
-        return visitedList;
+
+        List<V> shortestPath = new ArrayList<>();
+        V vertex = sink;
+        shortestPath.add(vertex);
+        while (!vertex.equals(source)) {
+            vertex = previousVertex.get(vertex);
+            shortestPath.add(vertex);
+        }
+
+        List<V> pathSourceToSink = new ArrayList<>();
+
+        for (int i  = shortestPath.size()-1; i >= 0; i--) {
+            pathSourceToSink.add(shortestPath.get(i));
+        }
+
+
+
+        return pathSourceToSink;
     }
 
     /**

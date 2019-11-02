@@ -541,6 +541,42 @@ public class GraphTest {
     }
 
     @Test
+    public void testShortestPath5() {
+        Vertex A = new Vertex(1, "A");
+        Vertex B = new Vertex(2, "B");
+        Vertex C = new Vertex(3, "C");
+        Vertex D = new Vertex(4, "D");
+        Vertex E = new Vertex(5, "E");
+
+
+        Edge<Vertex> AD = new Edge<>(A,D, 1);
+        Edge<Vertex> AB = new Edge<>(A,B, 6);
+        Edge<Vertex> BE = new Edge<>(B,E, 2);
+        Edge<Vertex> BC = new Edge<>(B,C, 5);
+        Edge<Vertex> CE = new Edge<>(C,E, 5);
+        Edge<Vertex> ED = new Edge<>(E,D, 1);
+        Edge<Vertex> DB = new Edge<>(D,B, 2);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(A);
+        g.addVertex(B);
+        g.addVertex(C);
+        g.addVertex(D);
+        g.addVertex(E);
+
+        g.addEdge(AD);
+        g.addEdge(AB);
+        g.addEdge(BE);
+        g.addEdge(BC);
+        g.addEdge(CE);
+        g.addEdge(ED);
+        g.addEdge(DB);
+
+
+        assertEquals(7, g.pathLength(g.shortestPath(A, C)));
+    }
+
+    @Test
     public void testSearch1() {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");

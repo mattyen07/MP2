@@ -335,8 +335,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     /**
      * Obtain a set of all vertices in the graph.
-     * Access to this set **should not** permit graph mutations.
-     *
      * @return a set of all vertices in the graph
      */
     @Override
@@ -344,15 +342,10 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         if(debug) {
             checkRep();
         }
-        Set<V> vertexSet = new HashSet<>();
 
-        for (V vertex : this.graph.keySet()) {
-            int id = vertex.id();
-            String name = vertex.name();
-            Vertex newVert = new Vertex(id, name);
-            V vertAdd = (V) newVert;
-            vertexSet.add(vertAdd);
-        }
+        Set<V> vertexSet = new HashSet<>();
+        vertexSet.addAll(this.graph.keySet());
+
         if(debug) {
             checkRep();
         }
@@ -372,14 +365,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             checkRep();
         }
         Set<E> edges = new HashSet<>();
-        for(E e : this.graph.get(v)) {
-            V v1 = e.v1();
-            V v2 = e.v2();
-            int Length = e.length();
-            Edge edge = new Edge<V>(v1,v2,Length);
-            E edgeImmutable = (E) edge;
-            edges.add(edgeImmutable);
-        }
+        edges.addAll(this.graph.get(v));
         if(debug) {
             checkRep();
         }
@@ -404,13 +390,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             Set<E> edges = this.graph.get(vertex);
             for (E edge : edges) {
                 if (!edgeSeen.contains(edge)) {
-                    V v1 = edge.v1();
-                    V v2 = edge.v2();
-                    int length = edge.length();
-                    Edge newEdge = new Edge(v1, v2, length);
-                    E addEdge = (E) newEdge;
-                    edgeSet.add(addEdge);
-                    edgeSeen.add(addEdge);
+                    edgeSet.add(edge);
+                    edgeSeen.add(edge);
                 }
             }
         }
@@ -650,11 +631,15 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * Compute the length of a given path
      *
      * @param path indicates the vertices on the given path
-     * @return the length of path
+     * @return the length of path, if the list is length 1, then we are at the same vertex and we return 0
      */
     @Override
     public int pathLength(List<V> path) {
         int sum = 0;
+
+        if(path.size() <= 1) {
+            return 0;
+        }
 
         for (int i = 1; i < path.size(); i++) {
             V v1 = path.get(i-1);
@@ -691,7 +676,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 }
 
                 if (pathLength < range) {
-                    vertexInRange.add(v);
+                    vertexInRange.add(vertex);
                 }
             }
         }

@@ -22,7 +22,34 @@ public class MillenniumFalcon implements Spaceship {
 
     @Override
     public void hunt(HunterStage state) {
-        // TODO: Implement this method
+        ArrayList<Integer> seenOnce = new ArrayList<>();
+        ArrayList<Integer> deadEnd = new ArrayList<>();
+        PlanetStatus[] neighbours = state.neighbors();
+        int earthID = state.currentID();
+        double maxSignal = 0;
+        int nextMove = state.currentID();
+
+        // set earth as current id, if we hit a dead end, move to earth and restart
+        while (!state.onKamino()) {
+
+            for (int i = 0; i < neighbours.length; i++) {
+                if (neighbours[i].signal() > maxSignal) {
+                    maxSignal = neighbours[i].signal();
+                    nextMove = neighbours[i].id();
+                }
+            }
+
+            if (!seenOnce.contains(nextMove)) {
+                state.moveTo(nextMove);
+                seenOnce.add(nextMove);
+            }
+
+
+        }
+
+
+
+
     }
 
     @Override

@@ -465,7 +465,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         Map<V, V> previousVertex = new HashMap<>();
 
         V currentVertex = source;
-        //int currentDistance = weights.get(source);
+        previousVertex.put(source, source);
 
         while (!visited.contains(sink)) {
 
@@ -474,7 +474,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             Map<V, E> unvisitedNeighbours = this.getNeighbours(currentVertex);
 
             //remove visited neighbours
-            for(V v: visited) {
+            for(V v : visited) {
                 if(unvisitedNeighbours.keySet().contains(v)) {
                     unvisitedNeighbours.remove(v);
                 }
@@ -491,6 +491,10 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                     if(unvisitedNeighbours.keySet().contains(v)) {
                         unvisitedNeighbours.remove(v);
                     }
+                }
+
+                if(currentVertex == source && unvisitedNeighbours.isEmpty()) {
+                    return new ArrayList<>();
                 }
 
             }

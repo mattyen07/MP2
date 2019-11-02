@@ -462,6 +462,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public List<V> shortestPath(V source, V sink) {
+
+        if(debug) {
+            checkRep();
+        }
+
         //initialize set of visited vertex's
         Set<V> visited = new HashSet<>();
         visited.add(source);
@@ -547,6 +552,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         }
 
 
+        if(debug) {
+            checkRep();
+        }
 
         return pathSourceToSink;
     }

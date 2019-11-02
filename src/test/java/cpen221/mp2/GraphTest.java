@@ -573,7 +573,7 @@ public class GraphTest {
         g.addEdge(DB);
 
 
-        assertEquals(7, g.pathLength(g.shortestPath(A, C)));
+        assertEquals(Arrays.asList(A, D, E, C), g.shortestPath(A, C));
     }
 
     @Test

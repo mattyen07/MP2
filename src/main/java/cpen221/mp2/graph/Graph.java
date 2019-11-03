@@ -488,13 +488,13 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 unvisitedNeighbours = this.getNeighbours(currentVertex);
 
                 //remove visited neighbours
-                for(V v: visited) {
+                for(V v : visited) {
                     if(unvisitedNeighbours.keySet().contains(v)) {
                         unvisitedNeighbours.remove(v);
                     }
                 }
 
-                if(currentVertex == source && unvisitedNeighbours.isEmpty()) {
+                if(currentVertex == source && unvisitedNeighbours.isEmpty() && !visited.contains(sink)) {
                     return new ArrayList<>();
                 }
 
@@ -512,7 +512,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
             //set current vertex to closest vertex
             int closestDistance = Integer.MAX_VALUE;
-            for (V v: unvisitedNeighbours.keySet()) {
+            for (V v : unvisitedNeighbours.keySet()) {
                 if(weights.get(v) <= closestDistance) {
                     currentVertex = v;
                     closestDistance = weights.get(v);

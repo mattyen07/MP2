@@ -170,6 +170,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         if(debug) {
             checkRep();
         }
+
         Set<V> vertexSet = this.graph.keySet();
 
         for(V vertex : vertexSet) {
@@ -208,7 +209,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 V vertex1 = edge.v1();
                 V vertex2 = edge.v2();
 
-                if (vertex1.equals(v1) && vertex2.equals(v2)) {
+                if (vertex1.equals(v1) && vertex2.equals(v2) || vertex1.equals(v2) && vertex2.equals(v1) ) {
                     return true;
                 }
 
@@ -464,9 +465,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
         //this map keeps track of the previous vertex that gives the shortest path to the key vertex.
         Map<V, V> previousVertex = new HashMap<>();
+        Map<V, V> previouslyVisited = new HashMap<>();
 
         V currentVertex = source;
         previousVertex.put(source, source);
+        previouslyVisited.put(source, source);
 
         while (!visited.contains(sink)) {
 
@@ -483,7 +486,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
             if(unvisitedNeighbours.isEmpty()) {
                 visited.add(currentVertex);
-                currentVertex = previousVertex.get(currentVertex);
+                currentVertex = previouslyVisited.get(currentVertex);
 
                 unvisitedNeighbours = this.getNeighbours(currentVertex);
 
@@ -497,6 +500,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 if(currentVertex == source && unvisitedNeighbours.isEmpty()) {
                     return new ArrayList<>();
                 }
+
 
             }
 
@@ -514,6 +518,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             int closestDistance = Integer.MAX_VALUE;
             for (V v: unvisitedNeighbours.keySet()) {
                 if(weights.get(v) <= closestDistance) {
+                    previouslyVisited.put(v, currentVertex);
                     currentVertex = v;
                     closestDistance = weights.get(v);
                 }

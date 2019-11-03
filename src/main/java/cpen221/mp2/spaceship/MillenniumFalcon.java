@@ -61,7 +61,14 @@ public class MillenniumFalcon implements Spaceship {
 
     @Override
     public void gather(GathererStage state) {
-        // TODO: Implement this method
+        ImGraph<Planet, Link> universeMap = state.planetGraph();
+
+        List<Planet> shortestPathToEarth = universeMap.shortestPath(state.currentPlanet(), state.earth());
+        shortestPathToEarth.remove(state.currentPlanet());
+
+        for(Planet p : shortestPathToEarth) {
+            state.moveTo(p);
+        }
     }
 
 }

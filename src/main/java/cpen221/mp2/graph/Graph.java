@@ -208,7 +208,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 V vertex1 = edge.v1();
                 V vertex2 = edge.v2();
 
-                if (vertex1.equals(v1) && vertex2.equals(v2)) {
+                if ((vertex1.equals(v1) && vertex2.equals(v2)) || (vertex1.equals(v2) && vertex2.equals(v1))) {
                     return true;
                 }
 
@@ -418,10 +418,12 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         Map<V, E> neighbours = new HashMap<>();
 
         for (E e : this.graph.get(v)) {
-            if (!e.v1().equals(v)) {
-                neighbours.put(e.v1(), e);
+            V v1 = e.v1();
+            V v2 = e.v2();
+            if (!v1.equals(v)) {
+                neighbours.put(v1, e);
             } else {
-                neighbours.put(e.v2(), e);
+                neighbours.put(v2, e);
             }
         }
         if(debug) {

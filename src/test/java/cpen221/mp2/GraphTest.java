@@ -637,4 +637,197 @@ public class GraphTest {
         assertEquals(answer, g.search(v2, 8));
     }
 
+    @Test
+    public void testSearch2() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 5);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 7);
+        Edge<Vertex> e3 = new Edge<>(v1, v4, 9);
+        Edge<Vertex> e4 = new Edge<>(v2, v4, 21);
+        Edge<Vertex> e5 = new Edge<>(v1, v3, 4);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.addEdge(e5);
+
+        Set<Vertex> answer = new HashSet<>();
+        answer.add(v1);
+
+        assertEquals(answer, g.search(v2, 7));
+    }
+
+    @Test
+    public void testSearch3() { //testing if none are in range
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 5);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 7);
+        Edge<Vertex> e3 = new Edge<>(v1, v4, 9);
+        Edge<Vertex> e4 = new Edge<>(v2, v4, 21);
+        Edge<Vertex> e5 = new Edge<>(v1, v3, 4);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.addEdge(e5);
+
+        Set<Vertex> answer = new HashSet<>();
+
+        assertEquals(answer, g.search(v2, 1));
+    }
+    @Test
+    public void testDiameter1() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 5);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 7);
+        Edge<Vertex> e3 = new Edge<>(v1, v4, 9);
+        Edge<Vertex> e4 = new Edge<>(v2, v4, 21);
+        Edge<Vertex> e5 = new Edge<>(v1, v3, 4);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+        g.addEdge(e5);
+
+
+        assertEquals(14, g.diameter());
+    }
+
+    @Test
+    public void testDiameter2() { //testing if graph has multiple components
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 5);
+        Edge<Vertex> e2 = new Edge<>(v3, v4, 7);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+        g.addEdge(e2);
+
+
+        assertEquals(7, g.diameter());
+    }
+
+    @Test
+    public void testDiameter3() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 5);
+        Edge<Vertex> e2 = new Edge<>(v3, v4, 7);
+        Edge<Vertex> e3 = new Edge<>(v1, v4, 20);
+        Edge<Vertex> e4 = new Edge<>(v3, v2, 10);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+
+
+        assertEquals(27, g.diameter());
+    }
+
+    @Test
+    public void testPathLength1() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 5);
+        Edge<Vertex> e2 = new Edge<>(v3, v4, 7);
+        Edge<Vertex> e3 = new Edge<>(v1, v4, 20);
+        Edge<Vertex> e4 = new Edge<>(v3, v2, 10);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+
+        List<Vertex> path = new ArrayList<>();
+        path.add(v1);
+        path.add(v2);
+        path.add(v3);
+
+        assertEquals(15, g.pathLength(path));
+
+    }
+
+    @Test
+    public void testGetEdge1() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 5);
+        Edge<Vertex> e2 = new Edge<>(v3, v4, 7);
+        Edge<Vertex> e3 = new Edge<>(v1, v4, 20);
+        Edge<Vertex> e4 = new Edge<>(v3, v2, 10);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+
+        assertEquals(e2, g.getEdge(v3,v4));
+
+    }
+
+
+
 }

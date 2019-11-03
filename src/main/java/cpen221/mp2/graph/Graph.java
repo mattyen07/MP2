@@ -170,7 +170,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         if(debug) {
             checkRep();
         }
-
         Set<V> vertexSet = this.graph.keySet();
 
         for(V vertex : vertexSet) {
@@ -209,7 +208,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 V vertex1 = edge.v1();
                 V vertex2 = edge.v2();
 
-                if (vertex1.equals(v1) && vertex2.equals(v2) || vertex1.equals(v2) && vertex2.equals(v1) ) {
+                if ((vertex1.equals(v1) && vertex2.equals(v2)) || (vertex1.equals(v2) && vertex2.equals(v1))) {
                     return true;
                 }
 
@@ -419,10 +418,12 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         Map<V, E> neighbours = new HashMap<>();
 
         for (E e : this.graph.get(v)) {
-            if (!e.v1().equals(v)) {
-                neighbours.put(e.v1(), e);
+            V v1 = e.v1();
+            V v2 = e.v2();
+            if (!v1.equals(v)) {
+                neighbours.put(v1, e);
             } else {
-                neighbours.put(e.v2(), e);
+                neighbours.put(v2, e);
             }
         }
         if(debug) {
@@ -465,11 +466,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
         //this map keeps track of the previous vertex that gives the shortest path to the key vertex.
         Map<V, V> previousVertex = new HashMap<>();
-        Map<V, V> previouslyVisited = new HashMap<>();
 
         V currentVertex = source;
         previousVertex.put(source, source);
-        previouslyVisited.put(source, source);
 
         while (!visited.contains(sink)) {
 
@@ -486,21 +485,20 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
             if(unvisitedNeighbours.isEmpty()) {
                 visited.add(currentVertex);
-                currentVertex = previouslyVisited.get(currentVertex);
+                currentVertex = previousVertex.get(currentVertex);
 
                 unvisitedNeighbours = this.getNeighbours(currentVertex);
 
                 //remove visited neighbours
-                for(V v: visited) {
+                for(V v : visited) {
                     if(unvisitedNeighbours.keySet().contains(v)) {
                         unvisitedNeighbours.remove(v);
                     }
                 }
 
-                if(currentVertex == source && unvisitedNeighbours.isEmpty()) {
+                if(currentVertex == source && unvisitedNeighbours.isEmpty() && !visited.contains(sink)) {
                     return new ArrayList<>();
                 }
-
 
             }
 
@@ -516,9 +514,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
             //set current vertex to closest vertex
             int closestDistance = Integer.MAX_VALUE;
-            for (V v: unvisitedNeighbours.keySet()) {
+            for (V v : unvisitedNeighbours.keySet()) {
                 if(weights.get(v) <= closestDistance) {
-                    previouslyVisited.put(v, currentVertex);
                     currentVertex = v;
                     closestDistance = weights.get(v);
                 }

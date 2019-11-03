@@ -16,7 +16,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
 
     /*
-    rep invariant: if one can travel vertex v1 to vertex v2 along edge e,
+    Rep Invariant: if one can travel vertex v1 to vertex v2 along edge e,
     one can travel from v2 to v1 along that same vertex.
     Edge.length > 0.
 
@@ -27,16 +27,18 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             for(V v2: graph.keySet()) {
                 if(!v1.equals(v2)) {
                     if(edge(v1, v2)) {
-                        assert(edge(v1, v2));
-                        assert(getEdge(v1, v2).equals(edge(v2, v1)));
+                        assert(getEdge(v1, v2).equals(getEdge(v2, v1)));
                     }
+
                 }
             }
         }
 
         // check that all edge's have lengths > 0
-        for(E e:allEdges()) {
-            assert(e.length()>0);
+        for (V v : graph.keySet()) {
+            for (E e : graph.get(v)) {
+                assert (e.length() > 0);
+            }
         }
 
     }
@@ -45,25 +47,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * Constructs empty graph.
      */
     public Graph() {
-        if(debug) {
-            checkRep();
-        }
-    }
-
-    /**
-     * Constructs new graph from a HashMap of vertices and sets of connecting edges.
-     * @param data
-     */
-    public Graph(HashMap<V,Set<E>> data) {
-        if(debug) {
-            checkRep();
-        }
-
-        for (V v: data.keySet()) {
-            Set<E> vertexInfo = new HashSet<>();
-            vertexInfo.addAll(data.get(v));
-            graph.put(v,vertexInfo);
-        }
         if(debug) {
             checkRep();
         }
@@ -196,9 +179,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean edge(V v1, V v2) {
-        if(debug) {
-            checkRep();
-        }
 
         Set<V> vertexSet = this.graph.keySet();
 
@@ -213,9 +193,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 }
 
             }
-        }
-        if(debug) {
-            checkRep();
         }
 
         return false;
@@ -533,7 +510,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
         List<V> pathSourceToSink = new ArrayList<>();
 
-        for (int i  = shortestPath.size()-1; i >= 0; i--) {
+        for (int i  = shortestPath.size() - 1; i >= 0; i--) {
             pathSourceToSink.add(shortestPath.get(i));
         }
 

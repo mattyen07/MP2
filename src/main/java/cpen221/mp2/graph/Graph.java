@@ -473,9 +473,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         while (!visited.contains(sink)) {
 
             int currentDistance = weights.get(currentVertex);
+            visited.add(currentVertex);
+
+
             //get neighbours
             Map<V, E> unvisitedNeighbours = this.getNeighbours(currentVertex);
-
             //remove visited neighbours
             for(V v : visited) {
                 if(unvisitedNeighbours.keySet().contains(v)) {
@@ -483,24 +485,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 }
             }
 
-            if(unvisitedNeighbours.isEmpty()) {
-                visited.add(currentVertex);
-                currentVertex = previousVertex.get(currentVertex);
-
-                unvisitedNeighbours = this.getNeighbours(currentVertex);
-
-                //remove visited neighbours
-                for(V v : visited) {
-                    if(unvisitedNeighbours.keySet().contains(v)) {
-                        unvisitedNeighbours.remove(v);
-                    }
-                }
-
-                if(currentVertex == source && unvisitedNeighbours.isEmpty() && !visited.contains(sink)) {
-                    return new ArrayList<>();
-                }
-
-            }
 
             //update weights map and if update previousVertex map.
             for (V v: unvisitedNeighbours.keySet()) {
@@ -510,8 +494,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 }
             }
 
-            visited.add(currentVertex);
-
             //set current vertex to closest vertex
             int closestDistance = Integer.MAX_VALUE;
             for (V v : unvisitedNeighbours.keySet()) {
@@ -519,6 +501,14 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                     currentVertex = v;
                     closestDistance = weights.get(v);
                 }
+            }
+
+            if(unvisitedNeighbours.isEmpty()) {
+
+                if(currentVertex == source && !visited.contains(sink)) {
+                    return new ArrayList<>();
+                }
+                currentVertex = previousVertex.get(currentVertex);
             }
 
         }

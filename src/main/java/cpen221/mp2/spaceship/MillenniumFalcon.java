@@ -64,11 +64,13 @@ public class MillenniumFalcon implements Spaceship {
         ImGraph<Planet, Link> universeMap = state.planetGraph();
 
         List<Planet> shortestPathToEarth = universeMap.shortestPath(state.currentPlanet(), state.earth());
+
         shortestPathToEarth.remove(state.currentPlanet());
 
         for(Planet p : shortestPathToEarth) {
             state.moveTo(p);
         }
     }
+
 
 }

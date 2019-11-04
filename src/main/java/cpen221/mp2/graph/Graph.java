@@ -453,6 +453,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         Set<V> visited = new HashSet<>();
         visited.add(source);
 
+        Set<V> unvisited = this.allVertices();
+        unvisited.remove(source);
+
         //get set of all vertexes in graph
         Set<V> vertexes = this.allVertices();
 
@@ -470,45 +473,68 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         V currentVertex = source;
         previousVertex.put(source, source);
 
-        while (!visited.contains(sink)) {
+        //New map to allow backtracking in case of dead end.
+        //V key maps to the V that led to key.
+        Map<V, V> backtrack = new HashMap<>();
+        backtrack.put(source, source);
+
+        Map<V, E> unvisitedNeighbours = new HashMap<>();
+
+        while (!unvisited.isEmpty()) {
 
             int currentDistance = weights.get(currentVertex);
             visited.add(currentVertex);
+            if (unvisited.contains(currentVertex)) {
+                unvisited.remove(currentVertex);
+            }
 
 
             //get neighbours
-            Map<V, E> unvisitedNeighbours = this.getNeighbours(currentVertex);
+            unvisitedNeighbours = this.getNeighbours(currentVertex);
             //remove visited neighbours
             for(V v : visited) {
-                if(unvisitedNeighbours.keySet().contains(v)) {
+                if(unvisitedNeighbours.containsKey(v)) {
                     unvisitedNeighbours.remove(v);
                 }
             }
 
-
-            //update weights map and if update previousVertex map.
-            for (V v: unvisitedNeighbours.keySet()) {
-                if (unvisitedNeighbours.get(v).length() + currentDistance <= weights.get(v)) {
-                    weights.replace(v, unvisitedNeighbours.get(v).length() + currentDistance);
-                    previousVertex.put(v, currentVertex);
+            if(!unvisitedNeighbours.isEmpty()) {
+                //update weights map and if update previousVertex map.
+                for (V v : unvisitedNeighbours.keySet()) {
+                    if (unvisitedNeighbours.get(v).length() + currentDistance <= weights.get(v)) {
+                        weights.replace(v, unvisitedNeighbours.get(v).length() + currentDistance);
+                        previousVertex.put(v, currentVertex);
+                    }
                 }
-            }
 
-            //set current vertex to closest vertex
-            int closestDistance = Integer.MAX_VALUE;
-            for (V v : unvisitedNeighbours.keySet()) {
-                if(weights.get(v) <= closestDistance) {
-                    currentVertex = v;
-                    closestDistance = weights.get(v);
+
+                //set current vertex to closest vertex
+                int closestDistance = Integer.MAX_VALUE;
+                for (V v : unvisitedNeighbours.keySet()) {
+                    if (weights.get(v) <= closestDistance) {
+                        //in case of backtracking.
+                        backtrack.put(v, currentVertex);
+                        currentVertex = v;
+                        closestDistance = weights.get(v);
+                    }
                 }
-            }
-
-            if(unvisitedNeighbours.isEmpty()) {
+            } else {
 
                 if(currentVertex == source && !visited.contains(sink)) {
                     return new ArrayList<>();
                 }
-                currentVertex = previousVertex.get(currentVertex);
+
+                //get neighbours
+                unvisitedNeighbours = this.getNeighbours(currentVertex);
+                //remove visited neighbours
+                for(V v : visited) {
+                    if(unvisitedNeighbours.containsKey(v)) {
+                        unvisitedNeighbours.remove(v);
+                    }
+                }
+
+                currentVertex = backtrack.get(currentVertex);
+
             }
 
         }
@@ -534,6 +560,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
         return pathSourceToSink;
     }
+
 
     /**
      * Compute the minimum spanning tree of the graph.

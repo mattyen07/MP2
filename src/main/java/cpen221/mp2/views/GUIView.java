@@ -29,6 +29,7 @@ public class GUIView implements View {
     private void addTopMenuListeners() {
         gui.addStartListener(e -> ctrlr.start());
         gui.addResetListener(e -> ctrlr.reset());
+
         gui.addNewMapListener(e -> ctrlr.newGame(JOptionPane.showInputDialog(
                 "Enter either a valid seed, or anything else to get a random seed.")));
     }

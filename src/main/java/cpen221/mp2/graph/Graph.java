@@ -22,12 +22,12 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     private Map<V, Set<E>> graph = new HashMap<>();
 
     /*
-    Abstraction Function: Creates an undirected graph of vertexes and connecting edges.
+    Abstraction Function: Creates an undirected graph of vertices and connecting edges.
      */
 
     /*
     Rep Invariant: if one can travel vertex v1 to vertex v2 along edge e,
-    one can travel from v2 to v1 along that same vertex.
+    one can travel from v2 to v1 along that same edge.
     Edge.length > 0.
 
      */

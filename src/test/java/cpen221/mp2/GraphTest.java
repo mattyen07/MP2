@@ -464,7 +464,9 @@ public class GraphTest {
         g.addEdge(e1);
         g.addEdge(e2);
 
-        assertEquals(Arrays.asList(), g.minimumSpanningTree());
+        ArrayList<Edge<Vertex>> answer = new ArrayList<>();
+
+        assertEquals(answer, g.minimumSpanningTree());
     }
 
     @Test
@@ -608,8 +610,10 @@ public class GraphTest {
         g.addEdge(bc);
         g.addEdge(ce);
 
+        ArrayList<Vertex> answer = new ArrayList<>();
 
-        assertEquals(Arrays.asList(), g.shortestPath(A, C));
+
+        assertEquals(answer, g.shortestPath(A, C));
     }
 
     @Test

@@ -8,6 +8,7 @@ import cpen221.mp2.graph.ImGraph;
 import cpen221.mp2.models.Link;
 import cpen221.mp2.models.Planet;
 import cpen221.mp2.models.PlanetStatus;
+import cpen221.mp2.models.Universe;
 import cpen221.mp2.util.Heap;
 
 import java.util.ArrayList;
@@ -65,81 +66,114 @@ public class MillenniumFalcon implements Spaceship {
     public void gather(GathererStage state) {
         universeMap = state.planetGraph();
 
-        Map<Planet, Double> weightedMap = updateWeightedMap(state);
-
-        while(!spiciestPlanet(weightedMap, state).equals(state.currentPlanet())) {
-            Planet p = spiciestPlanet(weightedMap, state);
-            moveToPlanet(p, state);
-            weightedMap = updateWeightedMap(state);
-        }
-        moveToPlanet(state.earth(), state);
-
-    }
-
-    private Map<Planet, Double> updateWeightedMap(GathererStage state) {
-        Map<Planet, Double> weightedPlanetMap = new HashMap<>();
-        for(Planet P: state.planets()) {
-            int distance = universeMap.pathLength(universeMap.shortestPath(state.currentPlanet(), P));
-            int spice = P.spice();
-            if (distance!=0) {
-                weightedPlanetMap.put(P, (double) spice / (double) distance);
-            }
+        while(!state.currentPlanet().equals(state.earth())) {
+            executeRoute(bestRoute(state), state);
         }
 
-        return weightedPlanetMap;
     }
 
     /**
-     * returns the most economical planet to visit.
-     * @param weightedMap
+     * will move spaceship along specified route.
+     * @param route is a continuous link of planets (route[i+1] is adjacent to route[i])
+     * @param state
+     */
+    private void executeRoute(List<Planet> route, GathererStage state) {
+        if(route.contains(state.currentPlanet())) {
+            route.remove(state.currentPlanet());
+        }
+
+        for(Planet p: route) {
+            state.moveTo(p);
+        }
+    }
+
+    /**
+     * returns the total fuel needed to travel to destination from start along shortest path.
+     * @requires there exists at least one path between start and destination.
+     * @param start starting planet
+     * @param destination end planet
+     * @param state
+     * @return fuelRequired for journey.
+     */
+    private int fuelRequired(Planet start, Planet destination, GathererStage state) {
+
+        int fuelRequired = universeMap.pathLength(universeMap.shortestPath(start, destination));
+
+        return fuelRequired;
+
+    }
+
+    /**
+     * Will return the best route to take.
      * @param state
      * @return
      */
-    private Planet spiciestPlanet(Map<Planet, Double> weightedMap, GathererStage state) {
-        double score = 0;
-        Planet bestPlanet = state.currentPlanet();
-        for(Planet p: weightedMap.keySet()) {
-            //planet is good if there is enough fuel and if its weight makes it viable.
-            if (score <= weightedMap.get(p) && enoughFuel(p, state)) {
+    private List<Planet> bestRoute(GathererStage state) {
+
+        List<Planet> bestRoute;
+        Planet bestPlanet = state.earth();
+
+        Map<Planet, Double> viabilityMap = viabilityMap(state);
+        double maxViability = viabilityMap.get(bestPlanet);
+
+        for(Planet p: viabilityMap.keySet()) {
+            if(viabilityMap.get(p) > maxViability) {
                 bestPlanet = p;
-                score = weightedMap.get(p);
+                maxViability = viabilityMap.get(p);
             }
         }
-        return bestPlanet;
+
+        bestRoute = universeMap.shortestPath(state.currentPlanet(), bestPlanet);
+
+
+        return bestRoute;
     }
 
     /**
-     * see if spaceship has enough fuel to get to earth from state.currentPlanet while passing through planet.
-     * @param planet
+     * returns a map where keys are Planets that map to a value
+     * describing how beneficial it is to travel to said planet.
      * @param state
-     * @return
+     * @return Map containing how beneficial travelling to each planet in state.planets() is.
      */
-    private boolean enoughFuel(Planet planet, GathererStage state) {
-
-        int fuelRequired = universeMap.pathLength(universeMap.shortestPath(planet, state.earth()));
-        fuelRequired =  fuelRequired + universeMap.pathLength(universeMap.shortestPath(state.currentPlanet(), planet));
-
-        if(fuelRequired>state.fuelRemaining()) {
-            return true;
+    private Map<Planet, Double> viabilityMap(GathererStage state) {
+        Map<Planet, Double> viabilityMap = new HashMap<>();
+        for(Planet p: state.planets()) {
+            viabilityMap.put(p, viability(p, state));
         }
-
-        return false;
-
+        return viabilityMap;
     }
 
     /**
-     * attempt to move to planet in the shortest path.
+     * determines how desirable each planet is as a destination
      * @param p
      * @param state
+     * @return
      */
-    private void moveToPlanet(Planet p, GathererStage state) {
-        List<Planet> shortestPath = universeMap.shortestPath(state.currentPlanet(), p);
-        shortestPath.remove(state.currentPlanet());
-        for(Planet nextPlanet: shortestPath) {
-            state.moveTo(nextPlanet);
+    private double viability(Planet p, GathererStage state) {
+        List<Planet> route = universeMap.shortestPath(state.currentPlanet(), p);
+
+        int fuelNeeded = fuelRequired(state.currentPlanet(), p, state) + fuelRequired(p, state.earth(), state);
+        if(fuelNeeded > state.fuelRemaining() || route.contains(state.earth())) {
+            return 0.0;
         }
 
+        return (double) spiceCollected(route) / (double) fuelNeeded;
+        //return spiceCollected(route);
     }
+
+    private int spiceCollected(List<Planet> route) {
+        int totalSpice = 0;
+        for(Planet p: route) {
+            totalSpice = totalSpice + p.spice();
+        }
+        return totalSpice;
+    }
+
+
+
+
+
+
 
 
 }

@@ -541,19 +541,22 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         ArrayList<E> allEdges = new ArrayList<>();
         Set<V> vertexSet = this.allVertices();
         List<E> mstList = new ArrayList<>();
-        Set<Set<V>> vertexSeen = new HashSet<>();
+        Set<Set<V>> vertexMerge = new HashSet<>();
 
 
         for (V v : vertexSet) { //adds all edges into a list
             Set<E> edgeSet = this.graph.get(v);
-            for (E edge : edgeSet) {
+
+            for (E edge : edgeSet) { //add every edge into the list
                 if (!allEdges.contains(edge)) {
                     allEdges.add(edge);
                 }
             }
-            Set<V> vertexAdd = new HashSet<>();
-            vertexAdd.add(v);
-            vertexSeen.add(vertexAdd);
+
+            //puts each vertex into its own set such that we can merge the sets after
+            Set<V> vertexSeen = new HashSet<>();
+            vertexSeen.add(v);
+            vertexMerge.add(vertexSeen);
         }
 
 
@@ -563,18 +566,22 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             V v1 = shortestEdge.v1();
             V v2 = shortestEdge.v2();
 
-            for (Set<V> vSet : vertexSeen) {
+            //checks to see if the two edge vertices are already in a set together
+            for (Set<V> vSet : vertexMerge) {
                 if (vSet.contains(v1) && vSet.contains(v2)) {
                     flag = false;
                     break;
                 }
             }
+
+            //if the two vertices on the edge are not in the same set, merge the sets together
+            // and add the edge to our MST
             if (flag) {
                 mstList.add(shortestEdge);
                 Set<V> v1Set = new HashSet<>();
                 Set<V> v2Set = new HashSet<>();
 
-                for (Set<V> vSet: vertexSeen) {
+                for (Set<V> vSet: vertexMerge) {
                     if (vSet.contains(v1)) {
                         v1Set = vSet;
                     }
@@ -585,7 +592,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
                 if (v1Set != v2Set) {
                     v1Set.addAll(v2Set);
-                    vertexSeen.remove(v2Set);
+                    vertexMerge.remove(v2Set);
                 }
 
             }
@@ -659,8 +666,10 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         int pathLength;
 
         for (V vertex : vertexSet) {
-            if (vertex != v) {
+
+            if (!vertex.equals(v)) {
                 List<V> shortestPath = shortestPath(v, vertex);
+
                 if (shortestPath.equals(Collections.emptyList())) {
                     pathLength = Integer.MAX_VALUE;
                 } else {

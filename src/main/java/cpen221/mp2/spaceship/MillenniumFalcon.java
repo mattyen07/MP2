@@ -39,7 +39,7 @@ public class MillenniumFalcon implements Spaceship {
         //while we are not on kamino, continue to go down a path
         while (!state.onKamino()) {
             PlanetStatus[] neighbours = state.neighbors();
-            double maxSignal = 0;
+            double maxSignal = 0.0;
 
             //for each planet in the neighbour array, find the planet with the
             // strongest signal that hasn't been visited

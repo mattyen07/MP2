@@ -5,7 +5,13 @@ import cpen221.mp2.graph.Graph;
 import cpen221.mp2.graph.Vertex;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -81,7 +87,7 @@ public class GraphTest {
     public void testAddEdge1() {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
-        Edge e1 = new Edge(v1,v2, 9);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -94,8 +100,8 @@ public class GraphTest {
     public void testAddEdge2() {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
-        Edge e1 = new Edge(v1,v2, 9);
-        Edge e2 = new Edge(v2, v1, 9);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
+        Edge<Vertex> e2 = new Edge<>(v2, v1, 9);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -109,7 +115,7 @@ public class GraphTest {
     public void testEdge1() {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
-        Edge e1 = new Edge(v1,v2, 9);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -124,8 +130,8 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1,v2, 9);
-        Edge e2 = new Edge(v2, v3, 7);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 7);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -139,7 +145,7 @@ public class GraphTest {
     public void testVEdge1() {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
-        Edge e1 = new Edge(v1,v2, 9);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -154,7 +160,7 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1,v2, 9);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -168,14 +174,14 @@ public class GraphTest {
     public void testEdgeLength1() {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
-        Edge e1 = new Edge(v1,v2, 9);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
         g.addVertex(v2);
         g.addEdge(e1);
 
-        assertEquals(9, g.edgeLength(v1,v2));
+        assertEquals(9, g.edgeLength(v1, v2));
     }
 
     @Test //testing the edge length function if edge isn't in a graph
@@ -183,14 +189,14 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1,v2, 9);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
         g.addVertex(v2);
         g.addEdge(e1);
 
-        assertEquals(0, g.edgeLength(v2,v3));
+        assertEquals(0, g.edgeLength(v2, v3));
     }
 
     @Test //testing the edge length sum function
@@ -198,8 +204,8 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1,v2, 9);
-        Edge e2 = new Edge(v2, v3, 7);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 7);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -216,9 +222,9 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1,v2, 9);
-        Edge e2 = new Edge(v2, v3, 7);
-        Edge e3 = new Edge(v2, v1, 7);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 7);
+        Edge<Vertex> e3 = new Edge<>(v2, v1, 7);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -236,8 +242,8 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1,v2, 9);
-        Edge e2 = new Edge(v2, v3, 7);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 7);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -254,8 +260,8 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1,v2, 9);
-        Edge e2 = new Edge(v2, v3, 7);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 7);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -271,7 +277,7 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1,v2, 9);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -287,7 +293,7 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1,v2, 9);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -302,7 +308,7 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1,v2, 9);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -323,9 +329,9 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1, v2, 9);
-        Edge e2 = new Edge(v2, v3, 1);
-        Edge e3 = new Edge(v1, v3, 10);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 1);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 10);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -335,7 +341,7 @@ public class GraphTest {
         g.addEdge(e2);
         g.addEdge(e3);
 
-        Set<Edge> answer = new HashSet<>();
+        Set<Edge<Vertex>> answer = new HashSet<>();
         answer.add(e1);
         answer.add(e3);
 
@@ -347,9 +353,9 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1, v2, 9);
-        Edge e2 = new Edge(v2, v3, 1);
-        Edge e3 = new Edge(v1, v3, 10);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 1);
+        Edge<Vertex> e3 = new Edge<>(v1, v3, 10);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -359,7 +365,7 @@ public class GraphTest {
         g.addEdge(e2);
         g.addEdge(e3);
 
-        Set<Edge> answer = new HashSet<>();
+        Set<Edge<Vertex>> answer = new HashSet<>();
         answer.add(e1);
         answer.add(e2);
         answer.add(e3);
@@ -372,8 +378,8 @@ public class GraphTest {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
-        Edge e1 = new Edge(v1, v2, 9);
-        Edge e2 = new Edge(v2, v3, 3);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 3);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -382,7 +388,7 @@ public class GraphTest {
         g.addEdge(e1);
         g.addEdge(e2);
 
-        Map<Vertex, Edge> answer = new HashMap<>();
+        Map<Vertex, Edge<Vertex>> answer = new HashMap<>();
         answer.put(v1, e1);
         answer.put(v3, e2);
 
@@ -395,11 +401,11 @@ public class GraphTest {
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
         Vertex v4 = new Vertex(4, "D");
-        Edge e1 = new Edge (v1, v2, 5);
-        Edge e2 = new Edge (v2,v3, 4);
-        Edge e3 = new Edge (v3, v4, 3);
-        Edge e4 = new Edge (v2, v4, 1);
-        Edge e5 = new Edge (v4, v1, 2);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 5);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 4);
+        Edge<Vertex> e3 = new Edge<>(v3, v4, 3);
+        Edge<Vertex> e4 = new Edge<>(v2, v4, 1);
+        Edge<Vertex> e5 = new Edge<>(v4, v1, 2);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -421,11 +427,11 @@ public class GraphTest {
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
         Vertex v4 = new Vertex(4, "D");
-        Edge e1 = new Edge (v1, v2, 3);
-        Edge e2 = new Edge (v2, v3, 1);
-        Edge e3 = new Edge (v3, v4, 3);
-        Edge e4 = new Edge (v2, v4, 2);
-        Edge e5 = new Edge (v4, v1, 1);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 3);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 1);
+        Edge<Vertex> e3 = new Edge<>(v3, v4, 3);
+        Edge<Vertex> e4 = new Edge<>(v2, v4, 2);
+        Edge<Vertex> e5 = new Edge<>(v4, v1, 1);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -447,8 +453,8 @@ public class GraphTest {
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
         Vertex v4 = new Vertex(4, "D");
-        Edge e1 = new Edge (v1, v2, 3);
-        Edge e2 = new Edge (v3, v4, 1);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 3);
+        Edge<Vertex> e2 = new Edge<>(v3, v4, 1);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -549,13 +555,13 @@ public class GraphTest {
         Vertex E = new Vertex(5, "E");
 
 
-        Edge<Vertex> AD = new Edge<>(A,D, 1);
-        Edge<Vertex> AB = new Edge<>(A,B, 6);
-        Edge<Vertex> BE = new Edge<>(B,E, 2);
-        Edge<Vertex> BC = new Edge<>(B,C, 5);
-        Edge<Vertex> CE = new Edge<>(C,E, 5);
-        Edge<Vertex> ED = new Edge<>(E,D, 1);
-        Edge<Vertex> DB = new Edge<>(D,B, 2);
+        Edge<Vertex> ad = new Edge<>(A, D, 1);
+        Edge<Vertex> ab = new Edge<>(A, B, 6);
+        Edge<Vertex> be = new Edge<>(B, E, 2);
+        Edge<Vertex> bc = new Edge<>(B, C, 5);
+        Edge<Vertex> ce = new Edge<>(C, E, 5);
+        Edge<Vertex> ed = new Edge<>(E, D, 1);
+        Edge<Vertex> db = new Edge<>(D, B, 2);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(A);
@@ -564,13 +570,13 @@ public class GraphTest {
         g.addVertex(D);
         g.addVertex(E);
 
-        g.addEdge(AD);
-        g.addEdge(AB);
-        g.addEdge(BE);
-        g.addEdge(BC);
-        g.addEdge(CE);
-        g.addEdge(ED);
-        g.addEdge(DB);
+        g.addEdge(ad);
+        g.addEdge(ab);
+        g.addEdge(be);
+        g.addEdge(bc);
+        g.addEdge(ce);
+        g.addEdge(ed);
+        g.addEdge(db);
 
 
         assertEquals(Arrays.asList(A, D, E, C), g.shortestPath(A, C));
@@ -585,10 +591,10 @@ public class GraphTest {
         Vertex E = new Vertex(5, "E");
 
 
-        Edge<Vertex> AD = new Edge<>(A,D, 1);
-        Edge<Vertex> BE = new Edge<>(B,E, 2);
-        Edge<Vertex> BC = new Edge<>(B,C, 5);
-        Edge<Vertex> CE = new Edge<>(C,E, 5);
+        Edge<Vertex> ad = new Edge<>(A, D, 1);
+        Edge<Vertex> be = new Edge<>(B, E, 2);
+        Edge<Vertex> bc = new Edge<>(B, C, 5);
+        Edge<Vertex> ce = new Edge<>(C, E, 5);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(A);
@@ -597,10 +603,10 @@ public class GraphTest {
         g.addVertex(D);
         g.addVertex(E);
 
-        g.addEdge(AD);
-        g.addEdge(BE);
-        g.addEdge(BC);
-        g.addEdge(CE);
+        g.addEdge(ad);
+        g.addEdge(be);
+        g.addEdge(bc);
+        g.addEdge(ce);
 
 
         assertEquals(Arrays.asList(), g.shortestPath(A, C));
@@ -768,7 +774,7 @@ public class GraphTest {
         g.addEdge(e4);
 
 
-        assertEquals(27, g.diameter());
+        assertEquals(20, g.diameter());
     }
 
     @Test
@@ -824,7 +830,7 @@ public class GraphTest {
         g.addEdge(e3);
         g.addEdge(e4);
 
-        assertEquals(e2, g.getEdge(v3,v4));
+        assertEquals(e2, g.getEdge(v3, v4));
 
     }
 

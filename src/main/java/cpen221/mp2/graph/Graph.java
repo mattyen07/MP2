@@ -547,7 +547,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         for (V v : vertexSet) { //adds all edges into a list
             Set<E> edgeSet = this.graph.get(v);
 
-            for (E edge : edgeSet) { //add every edge into the list
+            for (E edge : edgeSet) { 
                 if (!allEdges.contains(edge)) {
                     allEdges.add(edge);
                 }
@@ -560,8 +560,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         }
 
 
+        //All MST's will have a size equal to the # of vertices - 1
         while (mstList.size() < vertexSet.size() - 1) {
-            boolean flag = true;
+            boolean merge = true;
             E shortestEdge = findShortestEdge(allEdges);
             V v1 = shortestEdge.v1();
             V v2 = shortestEdge.v2();
@@ -569,14 +570,14 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             //checks to see if the two edge vertices are already in a set together
             for (Set<V> vSet : vertexMerge) {
                 if (vSet.contains(v1) && vSet.contains(v2)) {
-                    flag = false;
+                    merge = false;
                     break;
                 }
             }
 
             //if the two vertices on the edge are not in the same set, merge the sets together
             // and add the edge to our MST
-            if (flag) {
+            if (merge) {
                 mstList.add(shortestEdge);
                 Set<V> v1Set = new HashSet<>();
                 Set<V> v2Set = new HashSet<>();
@@ -599,9 +600,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
             allEdges.remove(shortestEdge);
 
+            //if we don't exit the loop and we have no more edges, there is no MST
             if (allEdges.isEmpty()) {
                 return new ArrayList<>();
             }
+
         }
         return mstList;
     }

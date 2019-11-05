@@ -1,8 +1,11 @@
 package cpen221.mp2;
 
+import cpen221.mp2.controllers.Kamino;
 import cpen221.mp2.graph.Edge;
 import cpen221.mp2.graph.Graph;
 import cpen221.mp2.graph.Vertex;
+import cpen221.mp2.spaceship.MillenniumFalcon;
+import cpen221.mp2.views.GUIView;
 import org.junit.Test;
 
 import java.util.Set;
@@ -12,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -986,6 +990,51 @@ public class GraphTest {
 
     }
 
+    @Test
+    public void testKamino1(){
+        Kamino game = new Kamino(1, new MillenniumFalcon(), new GUIView());
 
+        game.start();
+
+        while(!game.gatherSucceeded())  {
+            try {
+                game.update();
+            } catch(Exception e) {
+                fail("Exception");
+            }
+        }
+
+        assertTrue(game.huntSucceeded());
+        assertTrue(game.gatherSucceeded());
+    }
+
+    @Test
+    public void testKamino2(){ //gather failed with a previous version
+        Kamino game = new Kamino(2645594156377344407L, new MillenniumFalcon(), new GUIView());
+
+        game.start();
+
+        while(!game.gatherSucceeded())  {
+            game.update();
+        }
+
+        assertTrue(game.huntSucceeded());
+        assertTrue(game.gatherSucceeded());
+
+    }
+
+    @Test
+    public void testKamino3() { // tests for a random seed each time we run our tests
+        Kamino game = new Kamino(new Random().nextLong(), new MillenniumFalcon(), new GUIView());
+
+        game.start();
+
+        while (!game.gatherSucceeded()) {
+            game.update();
+        }
+
+        assertTrue(game.huntSucceeded());
+        assertTrue(game.gatherSucceeded());
+    }
 
 }

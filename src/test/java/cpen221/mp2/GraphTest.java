@@ -991,17 +991,13 @@ public class GraphTest {
     }
 
     @Test
-    public void testKamino1(){
+    public void testKamino1(){// testing seed 1
         Kamino game = new Kamino(1, new MillenniumFalcon(), new GUIView());
 
         game.start();
 
         while(!game.gatherSucceeded())  {
-            try {
-                game.update();
-            } catch(Exception e) {
-                fail("Exception");
-            }
+            game.update();
         }
 
         assertTrue(game.huntSucceeded());
@@ -1024,7 +1020,21 @@ public class GraphTest {
     }
 
     @Test
-    public void testKamino3() { // tests for a random seed each time we run our tests
+    public void testKamino3() { // seed that takes a long time
+        Kamino game = new Kamino(-5792514285509696024L, new MillenniumFalcon(), new GUIView());
+
+        game.start();
+
+        while (!game.gatherSucceeded()) {
+            game.update();
+        }
+
+        assertTrue(game.huntSucceeded());
+        assertTrue(game.gatherSucceeded());
+    }
+
+    @Test
+    public void testKamino4() { //random seed
         Kamino game = new Kamino(new Random().nextLong(), new MillenniumFalcon(), new GUIView());
 
         game.start();

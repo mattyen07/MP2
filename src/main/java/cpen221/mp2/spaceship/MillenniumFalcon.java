@@ -3,22 +3,16 @@ package cpen221.mp2.spaceship;
 import cpen221.mp2.controllers.GathererStage;
 import cpen221.mp2.controllers.HunterStage;
 import cpen221.mp2.controllers.Spaceship;
-import cpen221.mp2.graph.Edge;
 import cpen221.mp2.graph.ImGraph;
-import cpen221.mp2.graph.Vertex;
 import cpen221.mp2.models.Link;
 import cpen221.mp2.models.Planet;
 import cpen221.mp2.models.PlanetStatus;
-import cpen221.mp2.models.Universe;
-import cpen221.mp2.util.Heap;
 
-import java.util.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * An instance implements the methods needed to complete the mission.
@@ -28,7 +22,6 @@ public class MillenniumFalcon implements Spaceship {
     private ImGraph<Planet, Link> universeMap;
     private Set<Planet> unvisitedPlanets = new HashSet<>();
     private Map<Planet, Integer> spiceMap = new HashMap<>();
-    private final static int NUM_PLANETS_TO_CHECK = 10;
 
     @Override
     public void hunt(HunterStage state) {
@@ -76,12 +69,12 @@ public class MillenniumFalcon implements Spaceship {
     public void gather(GathererStage state) {
         universeMap = state.planetGraph();
 
-        for(Planet p: state.planets()) {
-                spiceMap.replace(p, p.spice());
-                unvisitedPlanets.add(p);
+        for (Planet p: state.planets()) {
+            spiceMap.replace(p, p.spice());
+            unvisitedPlanets.add(p);
         }
 
-        while(!state.currentPlanet().equals(state.earth())) {
+        while (!state.currentPlanet().equals(state.earth())) {
             executeRoute(bestRoute(state), state);
         }
 
@@ -93,16 +86,16 @@ public class MillenniumFalcon implements Spaceship {
      * @param state
      */
     private void executeRoute(List<Planet> route, GathererStage state) {
-        if(route.contains(state.currentPlanet())) {
+        if (route.contains(state.currentPlanet())) {
             route.remove(state.currentPlanet());
         }
-        if(unvisitedPlanets.contains(state.currentPlanet())) {
+        if (unvisitedPlanets.contains(state.currentPlanet())) {
             unvisitedPlanets.remove(state.currentPlanet());
         }
 
-        for(Planet p: route) {
+        for (Planet p: route) {
             state.moveTo(p);
-            if(unvisitedPlanets.contains(p)) {
+            if (unvisitedPlanets.contains(p)) {
                 unvisitedPlanets.remove(p);
             }
             spiceMap.replace(p, 0);
@@ -147,8 +140,8 @@ public class MillenniumFalcon implements Spaceship {
         Map<Planet, Double> viabilityMap = viabilityMap(state, 10);
         double maxViability = viabilityMap.get(bestPlanet);
 
-        for(Planet p: viabilityMap.keySet()) {
-            if(viabilityMap.get(p) > maxViability) {
+        for (Planet p: viabilityMap.keySet()) {
+            if (viabilityMap.get(p) > maxViability) {
                 bestPlanet = p;
                 maxViability = viabilityMap.get(p);
             }
@@ -168,9 +161,9 @@ public class MillenniumFalcon implements Spaceship {
      */
     private Map<Planet, Double> viabilityMap(GathererStage state, int numPlanets) {
         Map<Planet, Double> viability = new HashMap<>();
-        Set<Planet> interestingPlanets = topSpiciestPlanets(numPlanets-1, state);
+        Set<Planet> interestingPlanets = topSpiciestPlanets(numPlanets - 1, state);
         interestingPlanets.add(state.earth());
-        for(Planet p: interestingPlanets) {
+        for (Planet p: interestingPlanets) {
             viability.put(p, viability(p, state));
         }
         return viability;
@@ -188,20 +181,20 @@ public class MillenniumFalcon implements Spaceship {
             return 0.0;
         }
 
-        List<Planet> routeDestination = universeMap.shortestPath(state.currentPlanet(), destination);
+        List<Planet> routeDest = universeMap.shortestPath(state.currentPlanet(), destination);
         List<Planet> routeEarth = universeMap.shortestPath(destination, state.earth());
 
-        int fuelNeeded = fuelRequired(routeDestination, state) + fuelRequired(routeEarth, state);
-        if(fuelNeeded > state.fuelRemaining() || routeDestination.contains(state.earth())) {
+        int fuelNeeded = fuelRequired(routeDest, state) + fuelRequired(routeEarth, state);
+        if (fuelNeeded > state.fuelRemaining() || routeDest.contains(state.earth())) {
             return 0.0;
         }
-        return (double) spiceCollected(routeDestination) / (double) fuelNeeded;
+        return (double) spiceCollected(routeDest) / (double) fuelNeeded;
         //return spiceCollected(route);
     }
 
     private int spiceCollected(List<Planet> route) {
         int totalSpice = 0;
-        for(Planet p: route) {
+        for (Planet p: route) {
             totalSpice = totalSpice + p.spice();
         }
         return totalSpice;
@@ -213,12 +206,12 @@ public class MillenniumFalcon implements Spaceship {
         Set<Planet> planets = new HashSet<>(unvisitedPlanets);
         planets.remove(state.earth());
 
-        if(number>= planets.size()) {
+        if (number >= planets.size()) {
             return planets;
         }
         Set<Planet> spiciestPlanets = new HashSet<>();
 
-        for(int i = 0; i < number; i++) {
+        for (int i = 0; i < number; i++) {
             spiciestPlanets.add(spiciestPlanet(planets, state));
             planets.remove(spiciestPlanet(planets, state));
         }
@@ -230,8 +223,8 @@ public class MillenniumFalcon implements Spaceship {
 
         Planet mostSpicy = state.earth();
         int maxSpice = mostSpicy.spice();
-        for(Planet p: planets) {
-            if(p.spice()>=maxSpice) {
+        for (Planet p: planets) {
+            if (p.spice() >= maxSpice) {
                 maxSpice = p.spice();
                 mostSpicy = p;
             }

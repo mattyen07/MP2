@@ -344,6 +344,14 @@ public class GraphTest {
         assertEquals(g.allVertices(), answer);
     }
 
+    @Test //testing if the all vertices function works with no vertices in the graph
+    public void testAllVertices2() {
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        Set<Vertex> answer = new HashSet<>();
+
+        assertEquals(g.allVertices(), answer);
+    }
+
     @Test //testing if the all incident edges function works
     public void testAllEdgesIncident1() {
         Vertex v1 = new Vertex(1, "A");
@@ -368,6 +376,25 @@ public class GraphTest {
         assertEquals(g.allEdges(v1), answer);
     }
 
+    @Test //testing if the all incident edges function works if no edges incident to V
+    public void testAllEdgesIncident2() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Edge<Vertex> e1 = new Edge<>(v1, v3, 9);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addEdge(e1);
+
+
+        Set<Edge<Vertex>> answer = new HashSet<>();
+
+        assertEquals(g.allEdges(v2), answer);
+    }
+
     @Test //testing if the all edges function works
     public void testAllEdges1() {
         Vertex v1 = new Vertex(1, "A");
@@ -389,6 +416,14 @@ public class GraphTest {
         answer.add(e1);
         answer.add(e2);
         answer.add(e3);
+
+        assertEquals(answer, g.allEdges());
+    }
+
+    @Test //testing if the all edges function works if no edges are in the graph
+    public void testAllEdges2() {
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        Set<Edge<Vertex>> answer = new HashSet<>();
 
         assertEquals(answer, g.allEdges());
     }

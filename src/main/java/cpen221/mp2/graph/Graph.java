@@ -272,6 +272,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * Obtain a set of all vertices in the graph.
      *
      * @return a set of all vertices in the graph
+     * returns an empty set if no vertices are in the graph
      */
     @Override
     public Set<V> allVertices() {
@@ -283,6 +284,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      *
      * @param v the vertex of interest
      * @return all edges incident on v
+     * returns an empty set if no edges are incident to v
      */
     @Override
     public Set<E> allEdges(V v) {
@@ -293,6 +295,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * Obtain a set of all edges in the graph.
      *
      * @return all edges in the graph
+     * returns an empty set if no edges are in the graph
      */
     @Override
     public Set<E> allEdges() {

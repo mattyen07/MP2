@@ -199,6 +199,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         for (E edge : edgeSet) {
             if (edge.v1().equals(v1) && edge.v2().equals(v2)) {
                 return edge.length();
+            } else if (edge.v1().equals(v2) && edge.v2().equals(v1)) {
+                return edge.length();
             }
         }
 
@@ -209,6 +211,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * Obtain the sum of the lengths of all edges in the graph
      *
      * @return the sum of the lengths of all edges in the graph
+     * returns 0 if no edges are in the graph
      */
     @Override
     public int edgeLengthSum() {

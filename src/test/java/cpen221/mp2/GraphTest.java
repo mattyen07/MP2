@@ -219,6 +219,20 @@ public class GraphTest {
         assertEquals(0, g.edgeLength(v2, v3));
     }
 
+    @Test //testing the edge length function if arguments are reversed isn't in a graph
+    public void testEdgeLength3() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addEdge(e1);
+
+        assertEquals(9, g.edgeLength(v2, v1));
+    }
+
     @Test //testing the edge length sum function
     public void testEdgeLengthSum1() {
         Vertex v1 = new Vertex(1, "A");
@@ -237,24 +251,24 @@ public class GraphTest {
         assertEquals(16, g.edgeLengthSum());
     }
 
-    @Test //testing the edge length sum function, with some repeats of edges
+    @Test //testing the edge length sum function with a single edge
     public void testEdgeLengthSum2() {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
-        Vertex v3 = new Vertex(3, "C");
         Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
-        Edge<Vertex> e2 = new Edge<>(v2, v3, 7);
-        Edge<Vertex> e3 = new Edge<>(v2, v1, 7);
-
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
         g.addVertex(v2);
-        g.addVertex(v3);
         g.addEdge(e1);
-        g.addEdge(e2);
-        g.addEdge(e3);
 
-        assertEquals(16, g.edgeLengthSum());
+        assertEquals(9, g.edgeLengthSum());
+    }
+
+    @Test //testing the edge length sum function with no edges
+    public void testEdgeLengthSum3() {
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+
+        assertEquals(0, g.edgeLengthSum());
     }
 
     @Test //testing the remove edge function when edge is in graph

@@ -21,7 +21,7 @@ public class MillenniumFalcon implements Spaceship {
     long startTime = System.nanoTime(); // start time of rescue phase
     private ImGraph<Planet, Link> universeMap;
     private Set<Planet> unvisitedPlanets = new HashSet<>();
-    private final static int NUM_PLANETS_TO_CHECK = 20;
+    private static final int NUM_PLANETS_TO_CHECK = 20;
 
     @Override
     public void hunt(HunterStage state) {

@@ -1157,7 +1157,7 @@ public class GraphTest {
 
     @Test
     public void testKamino5() { //seed that takes a long time
-        Kamino game = new Kamino(-2912025469858177646L, new MillenniumFalcon(), new GUIView());
+        Kamino game = new Kamino(-2912025499858177646L, new MillenniumFalcon(), new GUIView());
 
         game.start();
 

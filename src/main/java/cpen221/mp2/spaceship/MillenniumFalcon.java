@@ -28,7 +28,7 @@ public class MillenniumFalcon implements Spaceship {
     private ImGraph<Planet, Link> universeMap;
     private Set<Planet> unvisitedPlanets = new HashSet<>();
     private Map<Planet, Integer> spiceMap = new HashMap<>();
-    private final static int NUM_PLANETS_TO_CHECK = 10;
+    private final static int NUM_PLANETS_TO_CHECK = 20;
 
     @Override
     public void hunt(HunterStage state) {
@@ -144,7 +144,7 @@ public class MillenniumFalcon implements Spaceship {
         List<Planet> bestRoute;
         Planet bestPlanet = state.earth();
 
-        Map<Planet, Double> viabilityMap = viabilityMap(state, 10);
+        Map<Planet, Double> viabilityMap = viabilityMap(state, NUM_PLANETS_TO_CHECK);
         double maxViability = viabilityMap.get(bestPlanet);
 
         for(Planet p: viabilityMap.keySet()) {

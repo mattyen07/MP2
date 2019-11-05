@@ -23,7 +23,7 @@ public class MillenniumFalcon implements Spaceship {
     private ImGraph<Planet, Link> universeMap;
     private Set<Planet> unvisitedPlanets = new HashSet<>();
     private Map<Planet, Integer> spiceMap = new HashMap<>();
-    private final static int NUM_PLANETS_TO_CHECK = 20;
+    private final static int NUM_PLANETS_TO_CHECK = 50;
 
     @Override
     public void hunt(HunterStage state) {

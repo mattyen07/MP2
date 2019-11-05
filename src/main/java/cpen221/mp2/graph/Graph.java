@@ -18,7 +18,6 @@ import java.util.LinkedList;
  * @param <V> represents a vertex type
  */
 public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>, IGraph<V, E> {
-    private static boolean debug = false;
     private Map<V, Set<E>> graph = new HashMap<>();
 
     /*
@@ -31,6 +30,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     Edge.length > 0.
      */
 
+    /* //check rep method to test our Rep Invarient
     private void checkRep() {
         // check that if v1 connects v2, then v2 also connects to v1 along same edge
         for (V v1: graph.keySet()) {
@@ -52,6 +52,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         }
 
     }
+     */
 
     /**
      * Constructs an empty graph object.

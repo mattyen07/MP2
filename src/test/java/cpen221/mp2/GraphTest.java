@@ -1142,18 +1142,4 @@ public class GraphTest {
         assertTrue(game.gatherSucceeded());
     }
 
-    @Test
-    public void testKamino5() { //random seed
-        Kamino game = new Kamino(new Random().nextLong(), new MillenniumFalcon(), new GUIView());
-
-        game.start();
-
-        while (!game.gatherSucceeded()) {
-            game.update();
-        }
-
-        assertTrue(game.huntSucceeded());
-        assertTrue(game.gatherSucceeded());
-    }
-
 }

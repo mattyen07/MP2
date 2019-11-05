@@ -236,11 +236,6 @@ public class MillenniumFalcon implements Spaceship {
      * @return viability score for destination.
      */
     private double viability(Planet destination, GathererStage state) {
-        //don't want to revisit planets.
-        if (!unvisitedPlanets.contains(destination)) {
-            return 0.0;
-        }
-
         List<Planet> routeDest = universeMap.shortestPath(state.currentPlanet(), destination);
         List<Planet> routeEarth = universeMap.shortestPath(destination, state.earth());
 

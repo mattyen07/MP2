@@ -991,12 +991,12 @@ public class GraphTest {
     }
 
     @Test
-    public void testKamino1(){// testing seed 1
+    public void testKamino1() { // testing seed 1
         Kamino game = new Kamino(1, new MillenniumFalcon(), new GUIView());
 
         game.start();
 
-        while(!game.gatherSucceeded())  {
+        while (!game.gatherSucceeded())  {
             game.update();
         }
 
@@ -1005,12 +1005,12 @@ public class GraphTest {
     }
 
     @Test
-    public void testKamino2(){ //gather failed with a previous version
+    public void testKamino2() { //gather failed with a previous version
         Kamino game = new Kamino(2645594156377344407L, new MillenniumFalcon(), new GUIView());
 
         game.start();
 
-        while(!game.gatherSucceeded())  {
+        while (!game.gatherSucceeded())  {
             game.update();
         }
 
@@ -1020,7 +1020,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testKamino3() { // seed that takes a long time
+    public void testKamino3() { //negative seed that takes a long time
         Kamino game = new Kamino(-5792514285509696024L, new MillenniumFalcon(), new GUIView());
 
         game.start();
@@ -1034,7 +1034,21 @@ public class GraphTest {
     }
 
     @Test
-    public void testKamino4() { //random seed
+    public void testKamino4() { //positive seed that takes a long time
+        Kamino game = new Kamino(2541482881071491767L, new MillenniumFalcon(), new GUIView());
+
+        game.start();
+
+        while (!game.gatherSucceeded()) {
+            game.update();
+        }
+
+        assertTrue(game.huntSucceeded());
+        assertTrue(game.gatherSucceeded());
+    }
+
+    @Test
+    public void testKamino5() { //random seed
         Kamino game = new Kamino(new Random().nextLong(), new MillenniumFalcon(), new GUIView());
 
         game.start();

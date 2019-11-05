@@ -29,8 +29,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     Rep Invariant: if one can travel vertex v1 to vertex v2 along edge e,
     one can travel from v2 to v1 along that same edge.
     Edge.length > 0.
-
      */
+
     private void checkRep() {
         // check that if v1 connects v2, then v2 also connects to v1 along same edge
         for (V v1: graph.keySet()) {
@@ -57,9 +57,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * Constructs an empty graph object.
      */
     public Graph() {
-        if (debug) {
-            checkRep();
-        }
+
     }
 
     /**
@@ -70,10 +68,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean addVertex(V v) {
-        if (debug) {
-            checkRep();
-        }
-
         Set<E> set = new HashSet<>();
         Set<V> vertexSet = this.graph.keySet();
 
@@ -84,10 +78,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         }
 
         this.graph.put(v, set);
-
-        if (debug) {
-            checkRep();
-        }
 
         return this.graph.containsKey(v);
     }
@@ -100,9 +90,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean vertex(V v) {
-        if (debug) {
-            checkRep();
-        }
 
         return this.graph.containsKey(v);
     }
@@ -115,19 +102,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean addEdge(E e) {
-        if (debug) {
-            checkRep();
-        }
-
         V v1 = e.v1();
         V v2 = e.v2();
 
         Set<E> vertexSet1 = this.graph.get(v1);
         Set<E> vertexSet2 = this.graph.get(v2);
-
-        if (debug) {
-            checkRep();
-        }
 
         if (vertexSet1.contains(e) || vertexSet2.contains(e)) {
             return false;
@@ -146,31 +125,21 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @param e is not null.
      */
     private void addEdgeToVertex(V v, E e) {
-        if (debug) {
-            checkRep();
-        }
 
         Set<E> vertexData = this.graph.get(v);
         vertexData.add(e);
         this.graph.replace(v, vertexData);
 
-        if (debug) {
-            checkRep();
-        }
     }
 
     /**
      * Check if an edge is part of the graph
      *
      * @param e the edge to check in the graph
-     * @return true if e is an edge in the graoh and false otherwise
+     * @return true if e is an edge in the graph and false otherwise
      */
     @Override
     public boolean edge(E e) {
-        if (debug) {
-            checkRep();
-        }
-
         Set<V> vertexSet = this.graph.keySet();
 
         for (V vertex : vertexSet) {
@@ -180,10 +149,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                     return true;
                 }
             }
-        }
-
-        if (debug) {
-            checkRep();
         }
 
         return false;
@@ -228,9 +193,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public int edgeLength(V v1, V v2) {
-        if (debug) {
-            checkRep();
-        }
 
         Set<E> edgeSet = this.graph.get(v1);
 
@@ -238,9 +200,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             if (edge.v1().equals(v1) && edge.v2().equals(v2)) {
                 return edge.length();
             }
-        }
-        if (debug) {
-            checkRep();
         }
 
         return 0;
@@ -253,9 +212,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public int edgeLengthSum() {
-        if (debug) {
-            checkRep();
-        }
 
         int sum = 0;
         Set<E> edgeSet = new HashSet<>();
@@ -269,10 +225,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             }
         }
 
-        if (debug) {
-            checkRep();
-        }
-
         return sum;
     }
 
@@ -284,10 +236,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean remove(E e) {
-        if (debug) {
-            checkRep();
-        }
-
         boolean removalFlag = false;
 
         for (V v : this.graph.keySet()) {
@@ -299,15 +247,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             this.graph.replace(v, edgeSet);
         }
 
-        if (!edge(e) && removalFlag) {
-            return true;
-        }
-
-        if (debug) {
-            checkRep();
-        }
-
-        return false;
+        return !edge(e) && removalFlag;
     }
 
     /**
@@ -318,26 +258,14 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean remove(V v) {
-        if (debug) {
-            checkRep();
-        }
-
         boolean removalFlag = false;
 
-        if (graph.containsKey(v)) {
-            graph.remove(v);
+        if (this.graph.containsKey(v)) {
+            this.graph.remove(v);
             removalFlag = true;
         }
 
-        if (!graph.containsKey(v) && removalFlag) {
-            return true;
-        }
-
-        if (debug) {
-            checkRep();
-        }
-
-        return false;
+        return !this.graph.containsKey(v) && removalFlag;
     }
 
     /**
@@ -347,18 +275,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Set<V> allVertices() {
-        if (debug) {
-            checkRep();
-        }
-
-        Set<V> vertexSet = new HashSet<>();
-        vertexSet.addAll(this.graph.keySet());
-
-        if (debug) {
-            checkRep();
-        }
-
-        return vertexSet;
+        return this.graph.keySet();
     }
 
     /**
@@ -370,17 +287,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Set<E> allEdges(V v) {
-        if (debug) {
-            checkRep();
-        }
-
-        Set<E> edges = this.graph.get(v);
-
-        if (debug) {
-            checkRep();
-        }
-
-        return edges;
+        return this.graph.get(v);
     }
 
     /**
@@ -391,9 +298,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Set<E> allEdges() {
-        if (debug) {
-            checkRep();
-        }
 
         Set<E> edgeSet = new HashSet<>();
 
@@ -405,10 +309,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                     edgeSet.add(edge);
                 }
             }
-        }
-
-        if (debug) {
-            checkRep();
         }
 
         return edgeSet;
@@ -423,9 +323,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Map<V, E> getNeighbours(V v) {
-        if (debug) {
-            checkRep();
-        }
 
         Map<V, E> neighbours = new HashMap<>();
 
@@ -438,10 +335,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             } else {
                 neighbours.put(v2, e);
             }
-        }
-
-        if (debug) {
-            checkRep();
         }
 
         return neighbours;
@@ -460,10 +353,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public List<V> shortestPath(V source, V sink) {
-        if (debug) {
-            checkRep();
-        }
-
         //initialize set of visited vertex's
         Set<V> visited = new HashSet<>();
 
@@ -520,20 +409,30 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 }
             }
 
-            //if there is not path between source and sink.
+            //if there is no path between source and sink.
             if (closestDistance == Integer.MAX_VALUE && !visited.contains(sink)) {
                 return new ArrayList<>();
             }
-
-
         }
 
+        return generatePath(previousVertex, sink, source);
+    }
+
+    /**
+     * Helper method for shortestPath to generate the list of vertices on the shortest path
+     * @param parentVertices  A hashmap with information on the previous vertex
+     * @param sink the end vertex
+     * @param source the start vertex
+     * @return a list of vertices from source to sink on the shortest path
+     */
+
+    private List<V> generatePath(Map<V, V> parentVertices, V sink, V source) {
         List<V> shortestPath = new ArrayList<>();
         V vertex = sink;
         shortestPath.add(vertex);
 
         while (!vertex.equals(source)) {
-            vertex = previousVertex.get(vertex);
+            vertex = parentVertices.get(vertex);
             shortestPath.add(vertex);
         }
 
@@ -541,11 +440,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
         for (int i = shortestPath.size() - 1; i >= 0; i--) {
             pathSourceToSink.add(shortestPath.get(i));
-        }
-
-
-        if (debug) {
-            checkRep();
         }
 
         return pathSourceToSink;
@@ -567,7 +461,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         Set<Set<V>> vertexMerge = new HashSet<>();
 
 
-        for (V v : vertexSet) { //adds all edges into a list
+        //adds all edges into a list
+        for (V v : vertexSet) {
             Set<E> edgeSet = this.graph.get(v);
 
             for (E edge : edgeSet) {
@@ -605,6 +500,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 Set<V> v1Set = new HashSet<>();
                 Set<V> v2Set = new HashSet<>();
 
+                //find the sets that contain v1 and v2 respectively
                 for (Set<V> vSet: vertexMerge) {
                     if (vSet.contains(v1)) {
                         v1Set = vSet;
@@ -683,6 +579,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @param v     the vertex to start the search from.
      * @param range the radius of the search.
      * @return a set of vertices that are within range of v (this set does not contain v).
+     * returns an empty set if no vertices are within range of v
      */
     @Override
     public Set<V> search(V v, int range) {

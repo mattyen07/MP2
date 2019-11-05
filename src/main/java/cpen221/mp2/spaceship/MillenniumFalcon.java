@@ -4,7 +4,6 @@ import cpen221.mp2.controllers.GathererStage;
 import cpen221.mp2.controllers.HunterStage;
 import cpen221.mp2.controllers.Spaceship;
 import cpen221.mp2.graph.ImGraph;
-import cpen221.mp2.graph.Vertex;
 import cpen221.mp2.models.Link;
 import cpen221.mp2.models.Planet;
 import cpen221.mp2.models.PlanetStatus;
@@ -71,7 +70,7 @@ public class MillenniumFalcon implements Spaceship {
     public void gather(GathererStage state) {
         universeMap = state.planetGraph();
 
-        for (Planet p: state.planets()) {
+        for (Planet p : state.planets()) {
             spiceMap.replace(p, p.spice());
             unvisitedPlanets.add(p);
         }
@@ -117,7 +116,7 @@ public class MillenniumFalcon implements Spaceship {
         int fuelRequired = 0;
         Planet start = (Planet) route.toArray()[0];
         Planet previousPlanet = start;
-        for (Planet p: route) {
+        for (Planet p : route) {
 
             if (!p.equals(start)) {
                 fuelRequired = fuelRequired + universeMap.getEdge(previousPlanet, p).fuelNeeded();
@@ -142,7 +141,7 @@ public class MillenniumFalcon implements Spaceship {
         Map<Planet, Double> viabilityMap = viabilityMap(state, NUM_PLANETS_TO_CHECK);
         double maxViability = viabilityMap.get(bestPlanet);
 
-        for (Planet p: viabilityMap.keySet()) {
+        for (Planet p : viabilityMap.keySet()) {
             if (viabilityMap.get(p) > maxViability) {
                 bestPlanet = p;
                 maxViability = viabilityMap.get(p);
@@ -165,7 +164,7 @@ public class MillenniumFalcon implements Spaceship {
         Map<Planet, Double> viability = new HashMap<>();
         Set<Planet> interestingPlanets = topSpiciestPlanets(numPlanets - 1, state);
         interestingPlanets.add(state.earth());
-        for (Planet p: interestingPlanets) {
+        for (Planet p : interestingPlanets) {
             viability.put(p, viability(p, state));
         }
         return viability;
@@ -225,7 +224,7 @@ public class MillenniumFalcon implements Spaceship {
 
         Planet mostSpicy = state.earth();
         int maxSpice = mostSpicy.spice();
-        for (Planet p: planets) {
+        for (Planet p : planets) {
             if (p.spice() >= maxSpice) {
                 maxSpice = p.spice();
                 mostSpicy = p;

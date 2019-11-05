@@ -19,11 +19,37 @@ import java.util.List;
  */
 public class MillenniumFalcon implements Spaceship {
     long startTime = System.nanoTime(); // start time of rescue phase
-    private ImGraph<Planet, Link> universeMap;
-    private Set<Planet> unvisitedPlanets = new HashSet<>();
-    private Map<Planet, Integer> spiceMap = new HashMap<>();
-    private final static int NUM_PLANETS_TO_CHECK = 50;
+    private ImGraph<Planet, Link> universeMap; //Immutable ImGraph representing universe.
+    private Set<Planet> unvisitedPlanets = new HashSet<>(); //a set of planets not visited during gather
+    // the number of planets to be considered as destinations for possible spice gathering routes.
+    private final static int NUM_PLANETS_TO_CHECK = 50; //must be greater than 0.
 
+    /**
+     * The spaceship is on the location given by parameter state.
+     * Move the spaceship to Kamino and then return.
+     * This completes the first phase of the mission.<br><br>
+     * <p>
+     * If the spaceship continues to move after reaching Kamino, rather than
+     * returning, it will not count. A return from this procedure while
+     * not on Kamino count as a failure.<br><br>
+     * <p>
+     * There is no limit to how many steps you can take, but the score is
+     * directly related to how long it takes you to find Kamino.<br><br>
+     * <p>
+     * At every step, you know only the current planet's ID, the IDs of
+     * neighboring planets, and the strength of the signal from Kamino
+     * at each planet.<br><br>
+     * <p>
+     * In this stage of the game,<br>
+     * (1) In order to get information about the current state, use
+     * functions currentID(), neighbors(), and signal().<br><br>
+     * <p>
+     * (2) Use method onKamino() to know if your ship is on Kamino.<br><br>
+     * <p>
+     * (3) Use method moveTo(int id) to move to a neighboring planet
+     * with the given ID. Doing this will change state to reflect the
+     * ship's new position.
+     */
     @Override
     public void hunt(HunterStage state) {
         Set<Integer> visited = new HashSet<>();
@@ -66,12 +92,30 @@ public class MillenniumFalcon implements Spaceship {
 
     }
 
+
+    /**
+     * The spaceship is on the location given by state. Get back to Earth
+     * without running out of fuel and return while on Earth. Your ship can
+     * determine how much fuel it has left via method fuelRemaining(), and how
+     * much fuel is needed to travel on a link via link's fuelNeeded().<br><br>
+     * <p>
+     * Each Planet has some spice. Moving to a Planet automatically
+     * collects any spice it carries, which increases your score. your
+     * objective is to return to earth with as much spice as possible.<br><br>
+     * <p>
+     * You now have access to the entire underlying graph, which can be
+     * accessed through parameter state. currentNode() and earth() return
+     * planets of interest, and planets() returns a collection of
+     * all planets in the graph.<br><br>
+     * <p>
+     * Note: Use moveTo() to move to a destination node adjacent to
+     * your ship's current node.
+     */
     @Override
     public void gather(GathererStage state) {
         universeMap = state.planetGraph();
 
         for (Planet p : state.planets()) {
-            spiceMap.replace(p, p.spice());
             unvisitedPlanets.add(p);
         }
 
@@ -82,9 +126,13 @@ public class MillenniumFalcon implements Spaceship {
     }
 
     /**
-     * will move spaceship along specified route.
-     * @param route is a continuous link of planets (route[i+1] is adjacent to route[i])
-     * @param state
+     * Moves spaceship along path designated by route starting with the first planet in the list and terminating
+     * with the last planet.
+     * @modifies unvisitedPlanets by removing planets from the set as they are visited.
+     * @modifies planet.spice, as planets are visited, all spice is collected.
+     * @param route the path that the spaceship will move along. Consecutive planets in route must be adjacent.
+     *              First planet in route must be either state.currentPlanet() or adjacent to state.currentPlanet().
+     * @param state of game.
      */
     private void executeRoute(List<Planet> route, GathererStage state) {
         if (route.contains(state.currentPlanet())) {
@@ -99,17 +147,15 @@ public class MillenniumFalcon implements Spaceship {
             if (unvisitedPlanets.contains(p)) {
                 unvisitedPlanets.remove(p);
             }
-            spiceMap.replace(p, 0);
         }
 
     }
 
     /**
-     * returns the total fuel needed to travel to destination from start along shortest path.
-     * @requires there exists at least one path between start and destination.
-     * @param route route to take.
-     * @param state
-     * @return fuelRequired for journey.
+     * Returns the amount of fuel needed to execute a specific route
+     * @param route path to be travelled. Route must be a valid path.
+     * @param state of game.
+     * @return fuel needed to travel along route.
      */
     private int fuelRequired(List<Planet> route, GathererStage state) {
 
@@ -129,9 +175,11 @@ public class MillenniumFalcon implements Spaceship {
     }
 
     /**
-     * Will return the best route to take.
-     * @param state
-     * @return
+     * Will return a list of planets describing the route with the highest validity.
+     * If all routes have a validity of 0.0, returns a route describing the shortest path from state.currentPlanet()
+     * to state.earth()
+     * @param state of game
+     * @return best route to take.
      */
     private List<Planet> bestRoute(GathererStage state) {
 
@@ -155,10 +203,12 @@ public class MillenniumFalcon implements Spaceship {
     }
 
     /**
-     * returns a map where keys are Planets that map to a value
-     * describing how beneficial it is to travel to said planet.
-     * @param state
-     * @return Map containing how beneficial travelling to each planet in state.planets() is.
+     * Returns a map that maps numPlanets planets of interest to a viability score representing how beneficial
+     * is it to travel to said planet from state.currentPlanet().
+     * Planets of interest are determined to be the planets with the most spice plus state.earth().
+     * @param state of game.
+     * @param numPlanets > 0, number of planets to get viability scores for.
+     * @return Map of viability for numPlanets of interest.
      */
     private Map<Planet, Double> viabilityMap(GathererStage state, int numPlanets) {
         Map<Planet, Double> viability = new HashMap<>();
@@ -171,10 +221,19 @@ public class MillenniumFalcon implements Spaceship {
     }
 
     /**
-     * determines how desirable each planet is as a destination
-     * @param destination
-     * @param state
-     * @return
+     * Determines a viability score >= 0.0 representing how desirable a planet is
+     * as a destination during GathererStage based on state.currentPlanet().
+     * The higher the viability score, the more beneficial it is to visit the planet
+     * during GathererStage. Viability score for planet P is determined by taking the total spice collected on
+     * shortest path from state.currentPlanet() to P divided by the fuel required to move along said path.
+     * If unvisitedPlanets.contains(P) then a viability of 0.0 is assigned instead.
+     * If there is not enough fuel remaining to move to state.earth() after moving to P,
+     * the P gets a viability of 0.0.
+     * @param destination the planet for which the viability score is calculated.
+     *                    destination exists and can be reached from state.currentPlanet()
+     *                    if it has not been visited already.
+     * @param state of game
+     * @return viability score for destination.
      */
     private double viability(Planet destination, GathererStage state) {
         //don't want to revisit planets.
@@ -193,6 +252,12 @@ public class MillenniumFalcon implements Spaceship {
         //return spiceCollected(route);
     }
 
+    /**
+     * Returns the total amount of spice that will be collected if spaceship moves along path
+     * defined by route.
+     * @param route potential path of spaceship. All planets in route must exist.
+     * @return total amount of spice.
+     */
     private int spiceCollected(List<Planet> route) {
         int totalSpice = 0;
         for (Planet p: route) {
@@ -201,7 +266,16 @@ public class MillenniumFalcon implements Spaceship {
         return totalSpice;
     }
 
-
+    /**
+     * Returns a set of max size number of the planets in unvisitedPlanets containing the most spice.
+     * Ex: If there are less or equal planets in unvisitedPlanets than number,
+     * returns a set containing all planets in unvisitedPlanets
+     * Ex: If there are more planets in unvisitedPlanets than number,
+     * Then planets are added in order of highest spice until set size is equal to number.
+     * @param number of max planets in set.
+     * @param state of game
+     * @return set of spiciest unvisited planets.
+     */
     private Set<Planet> topSpiciestPlanets(int number, GathererStage state) {
 
         Set<Planet> planets = new HashSet<>(unvisitedPlanets);
@@ -220,6 +294,13 @@ public class MillenniumFalcon implements Spaceship {
         return spiciestPlanets;
     }
 
+    /**
+     * Returns the planet containing the highest amount of spice in the Set planets.
+     * If Set is empty returns state.earth() even if state.earth() is not part of planets.
+     * @param planets set of planets to look at.
+     * @param state of game
+     * @return planet of highest spice.
+     */
     private Planet spiciestPlanet(Set<Planet> planets, GathererStage state) {
 
         Planet mostSpicy = state.earth();

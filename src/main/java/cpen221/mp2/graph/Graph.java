@@ -129,7 +129,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
         Set<E> vertexData = this.graph.get(v);
         vertexData.add(e);
-        this.graph.replace(v, vertexData);
 
     }
 
@@ -248,7 +247,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             this.graph.replace(v, edgeSet);
         }
 
-        return !edge(e) && removalFlag;
+        return !this.edge(e) && removalFlag;
     }
 
     /**

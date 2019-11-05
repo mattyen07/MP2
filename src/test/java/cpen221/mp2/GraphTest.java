@@ -237,7 +237,7 @@ public class GraphTest {
         assertEquals(16, g.edgeLengthSum());
     }
 
-    @Test //testing the edge length sum function, with some repeat of edges
+    @Test //testing the edge length sum function, with some repeats of edges
     public void testEdgeLengthSum2() {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
@@ -352,7 +352,7 @@ public class GraphTest {
         assertEquals(g.allVertices(), answer);
     }
 
-    @Test //testing if the all incident edges function works
+    @Test //testing if the all incident edges function returns the correct set
     public void testAllEdgesIncident1() {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
@@ -376,7 +376,7 @@ public class GraphTest {
         assertEquals(g.allEdges(v1), answer);
     }
 
-    @Test //testing if the all incident edges function works if no edges incident to V
+    @Test //testing if the all incident edges function works if no edges incident to v
     public void testAllEdgesIncident2() {
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");

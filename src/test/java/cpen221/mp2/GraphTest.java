@@ -689,6 +689,39 @@ public class GraphTest {
     }
 
     @Test
+    public void testShortestPath7() { // same source and sink
+        Vertex A = new Vertex(1, "A");
+        Vertex B = new Vertex(2, "B");
+        Vertex C = new Vertex(3, "C");
+        Vertex D = new Vertex(4, "D");
+        Vertex E = new Vertex(5, "E");
+
+
+        Edge<Vertex> ad = new Edge<>(A, D, 1);
+        Edge<Vertex> be = new Edge<>(B, E, 2);
+        Edge<Vertex> bc = new Edge<>(B, C, 5);
+        Edge<Vertex> ce = new Edge<>(C, E, 5);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(A);
+        g.addVertex(B);
+        g.addVertex(C);
+        g.addVertex(D);
+        g.addVertex(E);
+
+        g.addEdge(ad);
+        g.addEdge(be);
+        g.addEdge(bc);
+        g.addEdge(ce);
+
+        ArrayList<Vertex> answer = new ArrayList<>();
+        answer.add(A);
+
+
+        assertEquals(answer, g.shortestPath(A, A));
+    }
+
+    @Test
     public void testSearch1() { //testing search works
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");

@@ -347,6 +347,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return the vertices, in order, on the shortest path from source to sink
      * (both end points are part of the list)
      * returns an empty list if there is no path from source to sink
+     * If source and sink are the same, returns a list containing the source/sink
+     *
      */
     @Override
     public List<V> shortestPath(V source, V sink) {
@@ -356,6 +358,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
         //get set of all vertexes in graph
         Set<V> vertexes = this.allVertices();
+
 
         //get weights of shortest paths. Set all initial weights to Integer.MAX_VALUE
         //set source weight to 0.

@@ -19,9 +19,8 @@ import java.util.List;
  */
 public class MillenniumFalcon implements Spaceship {
     long startTime = System.nanoTime(); // start time of rescue phase
-    private ImGraph<Planet, Link> universeMap;
+    private ImGraph<Planet, Link> universeMap; 
     private Set<Planet> unvisitedPlanets = new HashSet<>();
-    private Map<Planet, Integer> spiceMap = new HashMap<>();
     private final static int NUM_PLANETS_TO_CHECK = 20;
 
     @Override
@@ -71,7 +70,6 @@ public class MillenniumFalcon implements Spaceship {
         universeMap = state.planetGraph();
 
         for (Planet p : state.planets()) {
-            spiceMap.replace(p, p.spice());
             unvisitedPlanets.add(p);
         }
 
@@ -99,7 +97,6 @@ public class MillenniumFalcon implements Spaceship {
             if (unvisitedPlanets.contains(p)) {
                 unvisitedPlanets.remove(p);
             }
-            spiceMap.replace(p, 0);
         }
 
     }
@@ -177,11 +174,6 @@ public class MillenniumFalcon implements Spaceship {
      * @return
      */
     private double viability(Planet destination, GathererStage state) {
-        //don't want to revisit planets.
-        if (!unvisitedPlanets.contains(destination)) {
-            return 0.0;
-        }
-
         List<Planet> routeDest = universeMap.shortestPath(state.currentPlanet(), destination);
         List<Planet> routeEarth = universeMap.shortestPath(destination, state.earth());
 

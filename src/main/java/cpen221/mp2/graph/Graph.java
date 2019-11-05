@@ -451,7 +451,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
         Map<V, E> unvisitedNeighbours;
 
-        while (visited.size()!=vertexes.size()) {
+        while (!visited.contains(sink)) {
 
             int currentDistance = weights.get(currentVertex);
             visited.add(currentVertex);

@@ -5,20 +5,14 @@ import cpen221.mp2.controllers.HunterStage;
 import cpen221.mp2.controllers.Spaceship;
 import cpen221.mp2.graph.Edge;
 import cpen221.mp2.graph.ImGraph;
+import cpen221.mp2.graph.Vertex;
 import cpen221.mp2.models.Link;
 import cpen221.mp2.models.Planet;
 import cpen221.mp2.models.PlanetStatus;
 import cpen221.mp2.models.Universe;
 import cpen221.mp2.util.Heap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * An instance implements the methods needed to complete the mission.
@@ -26,6 +20,8 @@ import java.util.NoSuchElementException;
 public class MillenniumFalcon implements Spaceship {
     long startTime = System.nanoTime(); // start time of rescue phase
     private ImGraph<Planet, Link> universeMap;
+    private Set<Planet> visitedPlanets = new HashSet<>();
+    private Map<Planet, Integer> spiceMap = new HashMap<>();
 
     @Override
     public void hunt(HunterStage state) {
@@ -66,6 +62,14 @@ public class MillenniumFalcon implements Spaceship {
     public void gather(GathererStage state) {
         universeMap = state.planetGraph();
 
+        for(Planet p: state.planets()) {
+            if(spiceMap.containsKey(p)) {
+                spiceMap.replace(p, p.spice());
+            } else {
+                spiceMap.put(p, p.spice());
+            }
+        }
+
         while(!state.currentPlanet().equals(state.earth())) {
             executeRoute(bestRoute(state), state);
         }
@@ -78,26 +82,38 @@ public class MillenniumFalcon implements Spaceship {
      * @param state
      */
     private void executeRoute(List<Planet> route, GathererStage state) {
+        visitedPlanets.add(state.currentPlanet());
         if(route.contains(state.currentPlanet())) {
             route.remove(state.currentPlanet());
         }
 
         for(Planet p: route) {
             state.moveTo(p);
+            visitedPlanets.add(p);
+            spiceMap.replace(p, 0);
         }
+
     }
 
     /**
      * returns the total fuel needed to travel to destination from start along shortest path.
      * @requires there exists at least one path between start and destination.
-     * @param start starting planet
-     * @param destination end planet
+     * @param route route to take.
      * @param state
      * @return fuelRequired for journey.
      */
-    private int fuelRequired(Planet start, Planet destination, GathererStage state) {
+    private int fuelRequired(List<Planet> route, GathererStage state) {
 
-        int fuelRequired = universeMap.pathLength(universeMap.shortestPath(start, destination));
+        int fuelRequired = 0;
+        Planet start = (Planet) route.toArray()[0];
+        Planet previousPlanet = start;
+        for (Planet p: route) {
+
+            if (!p.equals(start)) {
+                fuelRequired = fuelRequired + universeMap.getEdge(previousPlanet, p).fuelNeeded();
+            }
+            previousPlanet = p;
+        }
 
         return fuelRequired;
 
@@ -113,7 +129,7 @@ public class MillenniumFalcon implements Spaceship {
         List<Planet> bestRoute;
         Planet bestPlanet = state.earth();
 
-        Map<Planet, Double> viabilityMap = viabilityMap(state);
+        Map<Planet, Double> viabilityMap = viabilityMap(state, 5);
         double maxViability = viabilityMap.get(bestPlanet);
 
         for(Planet p: viabilityMap.keySet()) {
@@ -135,29 +151,36 @@ public class MillenniumFalcon implements Spaceship {
      * @param state
      * @return Map containing how beneficial travelling to each planet in state.planets() is.
      */
-    private Map<Planet, Double> viabilityMap(GathererStage state) {
-        Map<Planet, Double> viabilityMap = new HashMap<>();
-        for(Planet p: state.planets()) {
-            viabilityMap.put(p, viability(p, state));
+    private Map<Planet, Double> viabilityMap(GathererStage state, int numPlanets) {
+        Map<Planet, Double> viability = new HashMap<>();
+        Set<Planet> interestingPlanets = topSpiciestPlanets(numPlanets-1, state);
+        interestingPlanets.add(state.earth());
+        for(Planet p: interestingPlanets) {
+            viability.put(p, viability(p, state));
         }
-        return viabilityMap;
+        return viability;
     }
 
     /**
      * determines how desirable each planet is as a destination
-     * @param p
+     * @param destination
      * @param state
      * @return
      */
-    private double viability(Planet p, GathererStage state) {
-        List<Planet> route = universeMap.shortestPath(state.currentPlanet(), p);
-
-        int fuelNeeded = fuelRequired(state.currentPlanet(), p, state) + fuelRequired(p, state.earth(), state);
-        if(fuelNeeded > state.fuelRemaining() || route.contains(state.earth())) {
+    private double viability(Planet destination, GathererStage state) {
+        //don't want to revisit planets.
+        if (visitedPlanets.contains(destination)) {
             return 0.0;
         }
 
-        return (double) spiceCollected(route) / (double) fuelNeeded;
+        List<Planet> routeDestination = universeMap.shortestPath(state.currentPlanet(), destination);
+        List<Planet> routeEarth = universeMap.shortestPath(destination, state.earth());
+
+        int fuelNeeded = fuelRequired(routeDestination, state) + fuelRequired(routeEarth, state);
+        if(fuelNeeded > state.fuelRemaining() || routeDestination.contains(state.earth())) {
+            return 0.0;
+        }
+        return (double) spiceCollected(routeDestination) / (double) fuelNeeded;
         //return spiceCollected(route);
     }
 
@@ -170,10 +193,35 @@ public class MillenniumFalcon implements Spaceship {
     }
 
 
+    private Set<Planet> topSpiciestPlanets(int number, GathererStage state) {
 
+        Set<Planet> planets = state.planets();
+        planets.remove(state.earth());
 
+        if(number>= planets.size()) {
+            return planets;
+        }
+        Set<Planet> spiciestPlanets = new HashSet<>();
 
+        for(int i = 0; i < number; i++) {
+            spiciestPlanets.add(spiciestPlanet(planets, state));
+            planets.remove(spiciestPlanet(planets, state));
+        }
 
+        return spiciestPlanets;
+    }
 
+    private Planet spiciestPlanet(Set<Planet> planets, GathererStage state) {
+
+        Planet mostSpicy = state.earth();
+        int maxSpice = mostSpicy.spice();
+        for(Planet p: planets) {
+            if(p.spice()>=maxSpice) {
+                maxSpice = p.spice();
+                mostSpicy = p;
+            }
+        }
+        return mostSpicy;
+    }
 
 }

@@ -280,7 +280,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     /**
      * Obtain a set of all vertices incident on v.
-     * Access to this set **should not** permit graph mutations.
      *
      * @param v the vertex of interest
      * @return all edges incident on v
@@ -292,7 +291,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     /**
      * Obtain a set of all edges in the graph.
-     * Access to this set **should not** permit graph mutations.
      *
      * @return all edges in the graph
      */
@@ -316,7 +314,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     /**
      * Obtain all the neighbours of vertex v.
-     * Access to this map **should not** permit graph mutations.
      *
      * @param v is the vertex whose neighbourhood we want.
      * @return a map containing each vertex w that neighbors v and the edge between v and w.
@@ -420,7 +417,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     /**
      * Helper method for shortestPath to generate the list of vertices on the shortest path
-     * @param parentVertices  A hashmap with information on the previous vertex
+     * @param parentVertices  A hash map with information on the previous vertex
      * @param sink the end vertex
      * @param source the start vertex
      * @return a list of vertices from source to sink on the shortest path
@@ -574,7 +571,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     }
 
     /**
-     * Obtain all vertices w that are no more than a <em>path distance</em> of range from v.
+     * Obtain all vertices w that are no more than a path distance of range from v.
      *
      * @param v     the vertex to start the search from.
      * @param range the radius of the search.
@@ -609,11 +606,10 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     /**
      * Compute the diameter of the graph.
-     * <ul>
-     * <li>The diameter of a graph is the length of the longest shortest path in the graph.</li>
-     * <li>If a graph has multiple components then we will define the diameter
-     * as the diameter of the largest component.</li>
-     * </ul>
+     *
+     * The diameter of a graph is the length of the longest shortest path in the graph.
+     * If a graph has multiple components then we will define the diameter
+     * as the diameter of the largest component.
      *
      * @return the diameter of the graph.
      */

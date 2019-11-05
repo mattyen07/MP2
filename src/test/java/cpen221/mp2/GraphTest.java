@@ -390,7 +390,7 @@ public class GraphTest {
         answer.add(e2);
         answer.add(e3);
 
-        assertEquals(g.allEdges(), answer);
+        assertEquals(answer, g.allEdges());
     }
 
     @Test //testing if the get neighbours function works
@@ -415,8 +415,34 @@ public class GraphTest {
         assertEquals(g.getNeighbours(v2), answer);
     }
 
+    @Test //testing if the get neighbours function works when one node is not a neighbour
+    public void testGetNeighbours2() {
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 9);
+        Edge<Vertex> e2 = new Edge<>(v2, v3, 3);
+        Edge<Vertex> e3 = new Edge<>(v3, v4, 20);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+
+        Map<Vertex, Edge<Vertex>> answer = new HashMap<>();
+        answer.put(v2, e2);
+        answer.put(v4, e3);
+
+        assertEquals(answer, g.getNeighbours(v3));
+    }
+
     @Test
-    public void testMST1() {
+    public void testMST1() { //testing MST functions normally
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
@@ -442,7 +468,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testMST2() {
+    public void testMST2() { //testing MST
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
@@ -541,7 +567,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testShortestPath3() {
+    public void testShortestPath3() { //testing if the algorithm hits a dead end
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
@@ -595,7 +621,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testShortestPath5() {
+    public void testShortestPath5() { //testing with a cycle
         Vertex A = new Vertex(1, "A");
         Vertex B = new Vertex(2, "B");
         Vertex C = new Vertex(3, "C");
@@ -663,7 +689,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testSearch1() {
+    public void testSearch1() { //testing search works
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
@@ -853,7 +879,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testPathLength1() {
+    public void testPathLength1() { //Testing if path length works given a list of vertices
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
@@ -878,8 +904,9 @@ public class GraphTest {
         path.add(v1);
         path.add(v2);
         path.add(v3);
+        path.add(v4);
 
-        assertEquals(15, g.pathLength(path));
+        assertEquals(22, g.pathLength(path));
     }
 
     @Test
@@ -938,7 +965,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testGetEdge1() {
+    public void testGetEdge1() { //edge is found in graph
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");

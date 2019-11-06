@@ -917,9 +917,11 @@ public class GraphTest {
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
         Vertex v4 = new Vertex(4, "D");
+        Vertex v5 = new Vertex(5, "E");
 
-        Edge<Vertex> e1 = new Edge<>(v1, v2, 5);
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 11);
         Edge<Vertex> e2 = new Edge<>(v3, v4, 7);
+        Edge<Vertex> e3 = new Edge<>(v4, v5, 2);
 
         Graph<Vertex, Edge<Vertex>> g = new Graph<>();
         g.addVertex(v1);
@@ -930,7 +932,7 @@ public class GraphTest {
         g.addEdge(e2);
 
 
-        assertEquals(7, g.diameter());
+        assertEquals(9, g.diameter());
     }
 
     @Test

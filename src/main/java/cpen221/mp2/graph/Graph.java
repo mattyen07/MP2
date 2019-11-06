@@ -466,7 +466,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         List<E> mstList = new ArrayList<>();
         Set<Set<V>> vertexMerge = new HashSet<>();
 
-
         //adds all edges into a list
         for (V v : vertexSet) {
             Set<E> edgeSet = this.graph.get(v);
@@ -476,13 +475,11 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                     allEdges.add(edge);
                 }
             }
-
             //puts each vertex into its own set such that we can merge the sets after
             Set<V> vertexSeen = new HashSet<>();
             vertexSeen.add(v);
             vertexMerge.add(vertexSeen);
         }
-
 
         //All MST's will have a size equal to the # of vertices - 1
         while (mstList.size() < vertexSet.size() - 1) {
@@ -521,7 +518,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                     vertexMerge.remove(v2Set);
                 }
             }
-
             allEdges.remove(shortestEdge);
 
             //if we don't exit the loop and we have no more edges, there is no MST

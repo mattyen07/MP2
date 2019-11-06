@@ -22,7 +22,7 @@ public class MillenniumFalcon implements Spaceship {
     private ImGraph<Planet, Link> universeMap; //Immutable ImGraph representing universe.
     private Set<Planet> unvisitedPlanets = new HashSet<>(); //a set of planets not visited during gather
     // the number of planets to be considered as destinations for possible spice gathering routes.
-    private static final int NUM_PLANETS_TO_CHECK = 25; //must be greater than 0.
+    private static final int NUM_PLANETS_TO_CHECK = 5; //must be greater than 0.
 
     /**
      * The spaceship is on the location given by parameter state.

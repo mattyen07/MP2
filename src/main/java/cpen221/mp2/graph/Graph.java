@@ -646,6 +646,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         Set<V> largestComponentSet = new HashSet<>();
 
         for (V vertex : componentMap.keySet()) {
+
             if (componentMap.get(vertex).size() > largestComponentSize) {
                 largestComponentSize = componentMap.get(vertex).size();
                 largestComponentSet = componentMap.get(vertex);

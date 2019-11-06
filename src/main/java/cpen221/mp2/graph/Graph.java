@@ -626,13 +626,26 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     public int diameter() {
         int longestPath = 0;
         int length;
+        HashMap<V, Set<V>> componentMap = new HashMap<>();
 
         for (V v1 : this.graph.keySet()) {
+            Set<V> vertexSet = new HashSet<>();
+            componentMap.put(v1, vertexSet);
             for (V v2 : this.graph.keySet()) {
-                length = pathLength(shortestPath(v1, v2));
-                if (length > longestPath) {
-                    longestPath = length;
+                List<V> path = shortestPath(v1, v2);
+                if (!path.isEmpty()) {
+                    vertexSet.add(v2);
                 }
+            }
+        }
+
+        int largestComponent = 0;
+        Set<V> componentSet = new HashSet<>();
+
+        for (V vertex : componentMap.keySet()) {
+            if (componentMap.get(vertex).size() > largestComponent) {
+                largestComponent = componentMap.get(vertex).size();
+                componentSet = componentMap.get(vertex);
             }
         }
 

@@ -647,13 +647,18 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
         for (V vertex : componentMap.keySet()) {
             int currentComponentSize = componentMap.get(vertex).size();
+
             if (currentComponentSize > largestComponentSize) {
+
                 largestComponentSize = componentMap.get(vertex).size();
                 largestComponentSet = componentMap.get(vertex);
+
             } else if (currentComponentSize == largestComponentSize
                     && diameterOfComponent(componentMap.get(vertex))
                     > diameterOfComponent(largestComponentSet)) {
+
                 largestComponentSet = componentMap.get(vertex);
+
             }
         }
 

@@ -620,8 +620,15 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public int diameter() {
-        int longestPath = 0;
-        int length;
+        Set<V> largestComponent = this.getLargestComponent();
+        return diameterOfComponent(largestComponent);
+    }
+
+    /**
+     * Returns a set of all vertices contained in largest component of graph.
+     * @return set of vertices
+     */
+    private Set<V> getLargestComponent() {
         HashMap<V, Set<V>> componentMap = new HashMap<>();
 
         for (V v1 : this.graph.keySet()) {
@@ -635,18 +642,42 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             }
         }
 
-        int largestComponent = 0;
-        Set<V> componentSet = new HashSet<>();
+        int largestComponentSize = 0;
+        Set<V> largestComponentSet = new HashSet<>();
 
         for (V vertex : componentMap.keySet()) {
-            if (componentMap.get(vertex).size() > largestComponent) {
-                largestComponent = componentMap.get(vertex).size();
-                componentSet = componentMap.get(vertex);
+            if (componentMap.get(vertex).size() > largestComponentSize) {
+                largestComponentSize = componentMap.get(vertex).size();
+                largestComponentSet = componentMap.get(vertex);
             }
         }
 
-        return longestPath;
+        return largestComponentSet;
     }
+
+    /**
+     * returns diameter of Component.
+     * @param componentVectors all vectors part of graph component
+     * @return diameter of component.
+     */
+    private int diameterOfComponent(Set<V> componentVectors) {
+            int longestPath = 0;
+            int length;
+
+            for (V v1 : componentVectors) {
+                for (V v2 : componentVectors) {
+                    length = pathLength(shortestPath(v1, v2));
+                    if (length > longestPath) {
+                        longestPath = length;
+                    }
+                }
+            }
+
+            return longestPath;
+    }
+
+
+
 
     /**
      * Find the edge that connects two vertices if such an edge exists.

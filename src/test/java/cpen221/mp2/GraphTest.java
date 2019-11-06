@@ -996,6 +996,36 @@ public class GraphTest {
     }
 
     @Test
+    public void testDiameter5() { //graph with 2 components with equal vertices
+        Vertex v1 = new Vertex(1, "A");
+        Vertex v2 = new Vertex(2, "B");
+        Vertex v3 = new Vertex(3, "C");
+        Vertex v4 = new Vertex(4, "D");
+        Vertex v5 = new Vertex(5, "E");
+        Vertex v6 = new Vertex(6, "F");
+
+        Edge<Vertex> e1 = new Edge<>(v1, v2, 5);
+        Edge<Vertex> e2 = new Edge<>(v3, v4, 12);
+        Edge<Vertex> e3 = new Edge<>(v5, v4, 10);
+        Edge<Vertex> e4 = new Edge<>(v6, v1, 4);
+
+        Graph<Vertex, Edge<Vertex>> g = new Graph<>();
+        g.addVertex(v1);
+        g.addVertex(v2);
+        g.addVertex(v3);
+        g.addVertex(v4);
+        g.addVertex(v5);
+        g.addVertex(v6);
+        g.addEdge(e1);
+        g.addEdge(e2);
+        g.addEdge(e3);
+        g.addEdge(e4);
+
+
+        assertEquals(22, g.diameter());
+    }
+
+    @Test
     public void testPathLength1() { //Testing if path length works given a list of vertices
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");

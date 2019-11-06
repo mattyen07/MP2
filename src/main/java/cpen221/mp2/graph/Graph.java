@@ -646,11 +646,13 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
         Set<V> largestComponentSet = new HashSet<>();
 
         for (V vertex : componentMap.keySet()) {
-            if (componentMap.get(vertex).size() > largestComponentSize) {
+            int currentComponentSize = componentMap.get(vertex).size();
+            if (currentComponentSize > largestComponentSize) {
                 largestComponentSize = componentMap.get(vertex).size();
                 largestComponentSet = componentMap.get(vertex);
-            } else if (componentMap.get(vertex).size() == largestComponentSize &&
-                    diameterOfComponent(componentMap.get(vertex)) > diameterOfComponent(largestComponentSet)) {
+            } else if (currentComponentSize == largestComponentSize
+                    && diameterOfComponent(componentMap.get(vertex))
+                    > diameterOfComponent(largestComponentSet)) {
                 largestComponentSet = componentMap.get(vertex);
             }
         }
@@ -664,19 +666,19 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @return diameter of component.
      */
     private int diameterOfComponent(Set<V> componentVectors) {
-            int longestPath = 0;
-            int length;
+        int longestPath = 0;
+        int length;
 
-            for (V v1 : componentVectors) {
-                for (V v2 : componentVectors) {
-                    length = pathLength(shortestPath(v1, v2));
-                    if (length > longestPath) {
-                        longestPath = length;
-                    }
+        for (V v1 : componentVectors) {
+            for (V v2 : componentVectors) {
+                length = pathLength(shortestPath(v1, v2));
+                if (length > longestPath) {
+                    longestPath = length;
                 }
             }
+        }
 
-            return longestPath;
+        return longestPath;
     }
 
 

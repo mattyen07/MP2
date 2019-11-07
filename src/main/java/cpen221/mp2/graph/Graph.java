@@ -500,24 +500,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             //and add the edge to our MST
             if (merge) {
                 mstList.add(shortestEdge);
-                Set<V> v1Set = new HashSet<>();
-                Set<V> v2Set = new HashSet<>();
-
-                //find the sets that contain v1 and v2 respectively
-                for (Set<V> vSet: vertexMerge) {
-                    if (vSet.contains(v1)) {
-                        v1Set = vSet;
-                    }
-                    if (vSet.contains(v2)) {
-                        v2Set = vSet;
-                    }
-                }
-
-                if (v1Set != v2Set) {
-                    v1Set.addAll(v2Set);
-                    vertexMerge.remove(v2Set);
-                }
+                mergeSets(vertexMerge, shortestEdge);
             }
+
             allEdges.remove(shortestEdge);
 
             //if we don't exit the loop and we have no more edges, there is no MST
@@ -545,6 +530,33 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
             }
         }
         return shortestEdge;
+    }
+
+    /**
+     * Helper method for MST, merges two sets within the set of vertices together such that we
+     * can identify cycles in the MST
+     * @param vertexMerge a set of a set of vertices in the graph
+     * @param shortestEdge is an edge in the graph
+     */
+
+    private void mergeSets(Set<Set<V>> vertexMerge, E shortestEdge) {
+        Set<V> v1Set = new HashSet<>();
+        Set<V> v2Set = new HashSet<>();
+
+        //find the sets that contain v1 and v2 respectively
+        for (Set<V> vSet: vertexMerge) {
+            if (vSet.contains(shortestEdge.v1())) {
+                v1Set = vSet;
+            }
+            if (vSet.contains(shortestEdge.v2())) {
+                v2Set = vSet;
+            }
+        }
+
+        if (v1Set != v2Set) {
+            v1Set.addAll(v2Set);
+            vertexMerge.remove(v2Set);
+        }
     }
 
     /**

@@ -606,6 +606,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * as the diameter of the largest component.
      *
      * @return the diameter of the graph.
+     * If there are two largest components of a graph, returns the largest diameter of the
+     * the two largest components
      */
     @Override
     public int diameter() {

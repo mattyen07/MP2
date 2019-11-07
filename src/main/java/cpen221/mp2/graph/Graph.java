@@ -30,29 +30,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     Edge.length > 0.
      */
 
-    /* //check rep method to test our Rep Invarient
-    private void checkRep() {
-        // check that if v1 connects v2, then v2 also connects to v1 along same edge
-        for (V v1: graph.keySet()) {
-            for (V v2: graph.keySet()) {
-                if (!v1.equals(v2)) {
-                    if (edge(v1, v2)) {
-                        assert (getEdge(v1, v2).equals(getEdge(v2, v1)));
-                    }
-
-                }
-            }
-        }
-
-        // check that all edge's have lengths > 0
-        for (V v : graph.keySet()) {
-            for (E e : graph.get(v)) {
-                assert (e.length() > 0);
-            }
-        }
-
-    }
-     */
 
     /**
      * Constructs an empty graph object.

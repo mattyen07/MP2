@@ -247,7 +247,6 @@ public class MillenniumFalcon implements Spaceship {
             return 0.0;
         }
         return (double) spiceCollected(routeDest) / (double) fuelNeeded;
-        //return spiceCollected(route);
     }
 
     /**

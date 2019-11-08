@@ -35,7 +35,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * Constructs an empty graph object.
      */
     public Graph() {
-
     }
 
     /**
@@ -68,7 +67,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public boolean vertex(V v) {
-
         return this.graph.containsKey(v);
     }
 
@@ -103,10 +101,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      * @param e is not null.
      */
     private void addEdgeToVertex(V v, E e) {
-
         Set<E> vertexData = this.graph.get(v);
         vertexData.add(e);
-
     }
 
     /**
@@ -170,7 +166,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public int edgeLength(V v1, V v2) {
-
         Set<E> edgeSet = this.graph.get(v1);
 
         for (E edge : edgeSet) {
@@ -192,7 +187,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public int edgeLengthSum() {
-
         int sum = 0;
         Set<E> edgeSet = new HashSet<>();
 
@@ -279,7 +273,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Set<E> allEdges() {
-
         Set<E> edgeSet = new HashSet<>();
 
         for (V vertex : this.graph.keySet()) {
@@ -303,7 +296,6 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
      */
     @Override
     public Map<V, E> getNeighbours(V v) {
-
         Map<V, E> neighbours = new HashMap<>();
 
         for (E e : this.graph.get(v)) {
@@ -529,11 +521,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
                 v2Set = vSet;
             }
         }
-
-        if (v1Set != v2Set) {
             v1Set.addAll(v2Set);
             vertexMerge.remove(v2Set);
-        }
     }
 
     /**

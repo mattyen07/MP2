@@ -56,6 +56,8 @@ public class MillenniumFalcon implements Spaceship {
      * (3) Use method moveTo(int id) to move to a neighboring planet
      * with the given ID. Doing this will change state to reflect the
      * ship's new position.
+     * SPEC: Completes hunt stage of game.
+     * @param state of game.
      */
     @Override
     public void hunt(HunterStage state) {
@@ -118,7 +120,7 @@ public class MillenniumFalcon implements Spaceship {
      * Note: Use moveTo() to move to a destination node adjacent to
      * your ship's current node.
      * SPEC: completes the gather stage of the game attempting to earn the highest score.
-     * @param state of game
+     * @param state of game.
      */
     @Override
     public void gather(GathererStage state) {

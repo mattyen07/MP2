@@ -693,7 +693,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testShortestPath4() {
+    public void testShortestPath4() { //testing direct shortest path
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");
@@ -852,7 +852,7 @@ public class GraphTest {
     }
 
     @Test
-    public void testSearch2() {
+    public void testSearch2() { //testing if there is a path that is equal to range
         Vertex v1 = new Vertex(1, "A");
         Vertex v2 = new Vertex(2, "B");
         Vertex v3 = new Vertex(3, "C");

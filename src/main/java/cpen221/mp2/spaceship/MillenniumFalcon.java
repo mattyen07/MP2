@@ -25,6 +25,13 @@ public class MillenniumFalcon implements Spaceship {
     private static final int NUM_PLANETS_TO_CHECK = 5; //must be greater than 0.
 
     /**
+     * Rep Invariant: NUM_PLANETS_TO_CHECK must be greater than 1.
+     * this.universeMap is a graph representing the complete universe.
+     * this.unvisitedPlanets is a set of all planets that have not been visited during the gathering stage.
+     */
+
+
+    /**
      * The spaceship is on the location given by parameter state.
      * Move the spaceship to Kamino and then return.
      * This completes the first phase of the mission.<br><br>
@@ -110,6 +117,8 @@ public class MillenniumFalcon implements Spaceship {
      * <p>
      * Note: Use moveTo() to move to a destination node adjacent to
      * your ship's current node.
+     * SPEC: completes the gather stage of the game attempting to earn the highest score.
+     * @param state of game
      */
     @Override
     public void gather(GathererStage state) {
@@ -156,6 +165,7 @@ public class MillenniumFalcon implements Spaceship {
     /**
      * Returns the amount of fuel needed to execute a specific route
      * @param route path to be travelled. Route must be a valid path.
+     *              route must be a valid route (route.get(i) must be adjacent to route.get(i+1))
      * @param state of game.
      * @return fuel needed to travel along route.
      */
@@ -177,11 +187,11 @@ public class MillenniumFalcon implements Spaceship {
     }
 
     /**
-     * Will return a list of planets describing the route with the highest validity.
-     * If all routes have a validity of 0.0, returns a route describing
+     * Will return a list of planets describing the route with the highest viability.
+     * If all routes have a viability of 0.0, returns a route describing
      * the shortest path from state.currentPlanet() to state.earth()
      * @param state of game
-     * @return best route to take.
+     * @return best route to take. all routes start with state.currentPlanet().
      */
     private List<Planet> bestRoute(GathererStage state) {
 
@@ -205,11 +215,12 @@ public class MillenniumFalcon implements Spaceship {
     }
 
     /**
-     * Returns a map that maps numPlanets planets of interest to a viability score representing
+     * Returns a map that maps NUM_PLANETS_TO_CHECK planets of interest to a viability score representing
      * how beneficial it is to travel to said planet from state.currentPlanet().
+     * If there are less than NUM_PLANETS_TO_CHECK planets in the universe then all planets are deemed planets
+     * of interest.
      * Planets of interest are determined to be the planets with the most spice plus state.earth().
      * @param state of game.
-     * @param numPlanets > 0, number of planets to get viability scores for.
      * @return Map of viability for numPlanets of interest.
      */
     private Map<Planet, Double> viabilityMap(GathererStage state, int numPlanets) {
@@ -266,9 +277,9 @@ public class MillenniumFalcon implements Spaceship {
     /**
      * Returns a set of max size number of the planets in unvisitedPlanets containing highest spice.
      * Ex: If there are less or equal planets in unvisitedPlanets than number,
-     * returns a set containing all planets in unvisitedPlanets
+     * returns a set containing all planets in unvisitedPlanets minus state.earth()
      * Ex: If there are more planets in unvisitedPlanets than number,
-     * Then planets are added in order of highest spice until set size is equal to number.
+     * Then planets are added to set in order of highest spice until set size is equal to number.
      * @param number of max planets in set.
      * @param state of game
      * @return set of spiciest unvisited planets.

@@ -315,14 +315,16 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     ///////////////Start of ImGraph Implementation/////////////////////
 
     /**
-     * Compute the shortest path from source to sink
-     *
+     * Computes the shortest path from source to sink
+     * Sources: https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+     *          https://www.youtube.com/watch?v=gdmfOwyQlcI
+     *          https://www.youtube.com/watch?v=pVfj6mxhdMw
      * @param source the start vertex
      * @param sink   the end vertex
      * @return the vertices, in order, on the shortest path from source to sink
      * (both end points are part of the list)
      * returns an empty list if there is no path from source to sink
-     * If source and sink are the same, returns a list containing the source/sink
+     * If source and sink are the same, returns a list of length 1 containing only the source/sink.
      *
      */
     @Override
@@ -395,7 +397,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     /**
      * Helper method for shortestPath to generate the list of vertices on the shortest path
-     * @param parentVertices  A hash map with information on the previous vertex
+     * @param parentVertices  A hash map with information on the previous vertex. The key vertex maps
+     *                        to the vertex before it on the shortest paht.
      * @param sink the end vertex
      * @param source the start vertex
      * @return a list of vertices from source to sink on the shortest path
@@ -606,6 +609,8 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     /**
      * Returns a set of all vertices contained in largest component of graph.
+     * If there are two components of equal amounts of vertices, returns the component
+     * with the largest diameter.
      * @return set of vertices
      */
     private Set<V> getLargestComponent() {
@@ -646,8 +651,9 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
     }
 
     /**
-     * returns diameter of Component.
-     * @param componentVectors all vectors part of graph component
+     * returns diameter of Component. Diameter of the component is defined as the length
+     * of the longest shortest path.
+     * @param componentVectors all vectors part of one graph component
      * @return diameter of component.
      */
     private int diameterOfComponent(Set<V> componentVectors) {
@@ -671,7 +677,7 @@ public class Graph<V extends Vertex, E extends Edge<V>> implements ImGraph<V, E>
 
     /**
      * Find the edge that connects two vertices if such an edge exists.
-     * This method should not permit graph mutations.
+     * Note: Changes to returned edge E may mutate graph.
      *
      * @param v1 one end of the edge
      * @param v2 the other end of the edge
